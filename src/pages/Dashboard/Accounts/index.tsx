@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '../../../features/store';
+import { setSistersAccounts, addSisterAccount, removeSisterAccount } from '../../../features/sistersAccountsSlice';
 import SisterForm from './SisterForm';
-import SisterList, { type SisterAccount } from './SisterList';
+import SisterList from './SisterList';
 import { getSistersAccounts, registerSister, deleteSisterAccount } from '../../../services/user';
 
-const Accounts = () => {
+const Accounts = () => { 
 
-  const [sistersACcount, setSistersACcount] = useState<SisterAccount[]>([]);
+  const dispatch = useDispatch();
+  const sistersAccounts = useSelector((state: RootState) => state.sistersAccounts.accounts);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -15,7 +19,7 @@ const Accounts = () => {
         setLoading(true);
         const response = await getSistersAccounts();
         if (response.success && response.data) {
-          setSistersACcount(response.data);
+          dispatch(setSistersAccounts(response.data));
         }
       } catch (err: any) {
         setError("Failed to fetch sister accounts");
@@ -23,8 +27,13 @@ const Accounts = () => {
         setLoading(false);
       }
     };
-    fetchAccounts();
-  }, []);
+    // only fetch if the sisters accounts is null means not fetched at all 
+    if( !sistersAccounts )
+      fetchAccounts();
+    else {
+      setLoading(false);
+    }
+  }, [dispatch]);
 
   const add = async ( name: string, phoneNumber: string ) => {
     const response = await registerSister({
@@ -32,7 +41,7 @@ const Accounts = () => {
       phoneNumber,
     });
     if (response.success && response.data) {
-      setSistersACcount( prev => [...prev, response.data]);
+      dispatch(addSisterAccount(response.data));
       console.log("sister added success fully");
     }
   };
@@ -40,7 +49,7 @@ const Accounts = () => {
   const remove = async ( sisterId: string ) => {
     const response = await deleteSisterAccount(sisterId);
     if (response.success) {
-      setSistersACcount(prev => prev.filter(s => s._id !== sisterId));
+      dispatch(removeSisterAccount(sisterId));
       console.log("sister account deleted successfully");
     }
   };
@@ -66,7 +75,7 @@ const Accounts = () => {
       ) : (
         <>
           <SisterForm add={add} />
-          <SisterList sisters={sistersACcount} remove={remove} />
+          <SisterList sisters={sistersAccounts} remove={remove} />
         </>
       )}
     </div>

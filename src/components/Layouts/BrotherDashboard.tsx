@@ -22,8 +22,7 @@ const BrotherDashboard = () => {
     { name: 'Overview', path: '/dashboard', icon: '📊', end: true },
     { name: 'Accounts', path: '/dashboard/accounts', icon: '🏦', end: false },
     { name: 'Quizzes', path: '/dashboard/quizzes', icon: '🧠', end: false },
-    { name: 'Coupons', path: '/dashboard/coupons', icon: '🎟️', end: false },
-    { name: 'Invitation', path: '/dashboard/invitation', icon: '💌', end: false }
+    { name: 'Coupons', path: '/dashboard/coupons', icon: '🎟️', end: false },    
   ];
 
   return (

@@ -9,6 +9,11 @@ import Login from "./pages/Login";
 import BrotherDashboard from "./components/Layouts/BrotherDashboard";
 import Accounts from "./pages/Dashboard/Accounts";
 
+import Quizzes from "./pages/Dashboard/Quizzes";
+import SisterQuiz from "./pages/Dashboard/SisterQuiz";
+import Coupons from "./pages/Dashboard/Coupons";
+import Invitation from "./pages/Dashboard/Invitation";
+
 // import services & actions
 import { fetchUserProfile } from "./services/user";
 import { login } from "./features/userProfileSlice";
@@ -48,8 +53,12 @@ const App = () => {
 
       <Route path="/dashboard" element={<BrotherDashboard/>} >
         <Route path="accounts" element={<Accounts />} />
+        <Route path="quizzes" element={<Quizzes />} />
+        <Route path="coupons" element={<Coupons />} />
       </Route>
-
+        <Route path="/dashboard/invitation/:sisterId" element={<Invitation />} />
+      <Route path="/dashboard/quizzes/:quizId" element={<SisterQuiz />} />
+      
     </Routes>
   )
 }

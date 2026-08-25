@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router';
 
 export interface SisterAccount {
   _id: string;
@@ -19,14 +20,14 @@ interface SisterListProps {
 }
 
 const SisterList: React.FC<SisterListProps> = ({ sisters, remove }) => {
+  const navigate = useNavigate();
   const [sisterToDelete, setSisterToDelete] = useState<SisterAccount | null>(null);
   const [confirmPhone, setConfirmPhone] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
 
   const handleSendInvitation = (sister: SisterAccount) => {
-    // Mock function for sending invitation
-    alert(`Invitation sent to ${sister.name} at ${sister.phoneNumber}!`);
+    navigate(`/dashboard/invitation/${sister._id}`);
   };
 
   const handleDeleteClick = (sister: SisterAccount) => {
