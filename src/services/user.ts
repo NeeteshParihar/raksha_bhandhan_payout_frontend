@@ -22,10 +22,10 @@ export const registerBrother = async (data: RegisterBrotherData) => {
     }
   }
 
-export interface LoginBrotherData {
+export interface LoginUserData {
   phoneNumber: string;
   password: string;
-  countryCode?: string;
+  role: string;
 }
 
 export interface ILoginResponse {
@@ -34,17 +34,38 @@ export interface ILoginResponse {
   message: string
 }
 
-export const loginBrother = async (data: LoginBrotherData): Promise<ILoginResponse> => {
+export const loginUser = async (data: LoginUserData): Promise<ILoginResponse> => {
   try {
-    const response = await api.post('/users/login-brother', {
-      ...data,
-      countryCode: data.countryCode || '+91', // default to +91 as per backend schema
-    });
-
-    console.log(response.data);    
+    const response = await api.post('/users/login-user', data);
     return response.data;
   } catch (error) {
-    console.error('Error in loginBrother service:', error);
+    console.error('Error in loginUser service:', error);
+    throw error;
+  }
+}
+
+export const getOtp = async (phoneNumber: string) => {
+  try {
+    const response = await api.post('/users/get-otp', { phoneNumber });
+    return response.data;
+  } catch (error) {
+    console.error('Error in getOtp service:', error);
+    throw error;
+  }
+}
+
+export interface LoginByOtpData {
+  phoneNumber: string;
+  otp: string;
+  role?: string;
+}
+
+export const loginByOtp = async (data: LoginByOtpData): Promise<ILoginResponse> => {
+  try {
+    const response = await api.post('/users/login-by-otp', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in loginByOtp service:', error);
     throw error;
   }
 }
@@ -65,6 +86,16 @@ export const getSistersAccounts = async () => {
     return response.data;
   } catch (error) {
     console.error('Error in getSistersAccounts service:', error);
+    throw error;
+  }
+}
+
+export const getBrothersAccounts = async () => {
+  try {
+    const response = await api.get('/users/brothers');
+    return response.data;
+  } catch (error) {
+    console.error('Error in getBrothersAccounts service:', error);
     throw error;
   }
 }
@@ -94,6 +125,16 @@ export const deleteSisterAccount = async (sisterId: string) => {
     return response.data;
   } catch (error) {
     console.error('Error in deleteSisterAccount service:', error);
+    throw error;
+  }
+}
+
+export const logoutUser = async () => {
+  try {
+    const response = await api.post('/users/logout');
+    return response.data;
+  } catch (error) {
+    console.error('Error in logoutUser service:', error);
     throw error;
   }
 }
