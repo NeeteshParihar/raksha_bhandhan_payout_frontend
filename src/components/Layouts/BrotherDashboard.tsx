@@ -2,20 +2,25 @@ import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../features/userProfileSlice';
+import { logoutUser } from '../../services/user';
 
 const BrotherDashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const handleLogout = () => {
-    // Dispatch logout to clear Redux state
-    dispatch(logout());
-    
-    // In a full implementation, you would also call an API to clear the HTTP-only cookie here
-    
-    // Redirect to home page
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error('Logout API call failed:', error);
+    } finally {
+      // Dispatch logout to clear Redux state
+      dispatch(logout());
+      
+      // Redirect to home page
+      navigate('/');
+    }
   };
 
   const navItems = [

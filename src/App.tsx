@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route } from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 import { useDispatch } from "react-redux";
 
 // import pages
@@ -7,10 +7,13 @@ import Home from "./pages/Home";
 import Register from "./pages/register";
 import Login from "./pages/Login";
 import BrotherDashboard from "./components/Layouts/BrotherDashboard";
+import SisterDashboard from "./components/Layouts/SisterDashboard";
 import Accounts from "./pages/Dashboard/Accounts";
 
 import Quizzes from "./pages/Dashboard/Quizzes";
 import SisterQuiz from "./pages/Dashboard/SisterQuiz";
+import SisterMyQuizzes from "./pages/Dashboard/SisterMyQuizzes";
+import TakeQuiz from "./pages/Dashboard/TakeQuiz";
 import Coupons from "./pages/Dashboard/Coupons";
 import Invitation from "./pages/Dashboard/Invitation";
 
@@ -58,6 +61,14 @@ const App = () => {
       </Route>
         <Route path="/dashboard/invitation/:sisterId" element={<Invitation />} />
       <Route path="/dashboard/quizzes/:quizId" element={<SisterQuiz />} />
+      
+      <Route path="/sisterDashboard" element={<SisterDashboard />}>
+        <Route index element={<Navigate to="myquizzes" replace />} />
+        <Route path="myquizzes" element={<SisterMyQuizzes />} />
+       
+        {/* You can add nested routes for Account here later */}
+      </Route>
+       <Route path="/sisterDashboard/myquizzes/quiz/:quizId" element={<TakeQuiz />} />
       
     </Routes>
   )

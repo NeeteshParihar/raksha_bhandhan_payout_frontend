@@ -28,7 +28,7 @@ const Hero = () => {
               Welcome back, {user.name || 'friend'}!
             </p>
             <Link 
-              to="/dashboard"
+              to={user.role === 'SISTER' ? '/sisterDashboard' : '/dashboard'}
               className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-full text-white bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-lg transform transition hover:-translate-y-1"
             >
               Go to Dashboard

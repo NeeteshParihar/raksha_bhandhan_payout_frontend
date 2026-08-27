@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userProfileReducer from './userProfileSlice';
 import sistersAccountsReducer from './sistersAccountsSlice';
+import brothersAccountsReducer from './brothersAccountSlice';
 
 export const store = configureStore({
   reducer: {
     userProfile: userProfileReducer,
     sistersAccounts: sistersAccountsReducer,
+    brothersAccounts: brothersAccountsReducer,
   },
 });
 
