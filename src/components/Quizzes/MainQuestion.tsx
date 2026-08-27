@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { createPortal } from 'react-dom';
 import type { IQuizDetails, IQuizAttempts } from '../../services/quiz';
@@ -18,7 +18,7 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
   attempts,
   setAttempts,
   currentQuestionIndex,
-  setCurrentQuestionIndex
+  // setCurrentQuestionIndex
 }) => {
   const navigate = useNavigate();
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
@@ -29,7 +29,6 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const totalQuestions = quizDetails.questions.length;
   const currentQuestion = quizDetails.questions[currentQuestionIndex];
   const attempt = attempts?.questions?.find(q => q.questionId === currentQuestion._id);
   const isAttempted = Boolean(attempt);

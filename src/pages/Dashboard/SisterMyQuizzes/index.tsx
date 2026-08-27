@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import PickBrother from '../../../components/Quizzes/PickBrother';
 import type { BrotherAccount } from '../../../features/brothersAccountSlice';

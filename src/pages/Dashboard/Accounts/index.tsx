@@ -75,7 +75,7 @@ const Accounts = () => {
       ) : (
         <>
           <SisterForm add={add} />
-          <SisterList sisters={sistersAccounts} remove={remove} />
+          <SisterList sisters={sistersAccounts || []} remove={remove} />
         </>
       )}
     </div>

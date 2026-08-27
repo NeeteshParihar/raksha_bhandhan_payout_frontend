@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../features/store';
 import { createPortal } from 'react-dom';
 import { SisterLoginComponent } from '../../../components/Auth/SisterLoginComponent';
-import { getQuizById, performQuizAction, QuizAction, getQuizAttempts } from '../../../services/quiz';
+import { getQuizById, getQuizAttempts } from '../../../services/quiz';
 import type { IQuizDetails, IQuizAttempts } from '../../../services/quiz';
 import { QuizIntro } from '../../../components/Quizzes/QuizIntro';
 import ActiveQuiz from '../../../components/Quizzes/ActiveQuiz';
