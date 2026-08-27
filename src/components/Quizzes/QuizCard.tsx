@@ -4,11 +4,19 @@ import type { IQuiz } from '../../services/quiz';
 
 interface QuizCardProps {
   quiz: IQuiz;
-  onAddQuestions: (quiz: IQuiz) => void;
-  onResetQuiz: (quiz: IQuiz) => void;
+  userRole?: 'BROTHER' | 'SISTER';
+  onAddQuestions?: (quiz: IQuiz) => void;
+  onResetQuiz?: (quiz: IQuiz) => void;
+  onSisterAction?: (quiz: IQuiz) => void;
 }
 
-const QuizCard: React.FC<QuizCardProps> = ({ quiz, onAddQuestions, onResetQuiz }) => {
+const QuizCard: React.FC<QuizCardProps> = ({ 
+  quiz, 
+  userRole = 'BROTHER', 
+  onAddQuestions, 
+  onResetQuiz,
+  onSisterAction 
+}) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -42,44 +50,77 @@ const QuizCard: React.FC<QuizCardProps> = ({ quiz, onAddQuestions, onResetQuiz }
     <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all flex items-center justify-between group">
       <div>
         <h3 className="text-lg font-bold text-gray-800">{quiz.title}</h3>
-        <div className="mt-2">
+        <div className="mt-2 flex flex-wrap items-center gap-3">
           <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(quiz.status)}`}>
             {quiz.status.replace('_', ' ')}
           </span>
+          {quiz.totalAmount !== undefined && (
+            <span className="text-sm font-semibold text-gray-700 bg-gray-50 px-2 py-1 rounded-md border border-gray-200">
+              Total: ₹{quiz.totalAmount}
+            </span>
+          )}
+          {quiz.payoutStats && (
+            <div className="flex gap-2 text-xs font-medium">
+              <span className="text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-200" title="Pending Payouts">
+                {quiz.payoutStats.pending} Pending
+              </span>
+              <span className="text-green-600 bg-green-50 px-2 py-1 rounded border border-green-200" title="Successful Payouts">
+                {quiz.payoutStats.success} Success
+              </span>
+              <span className="text-red-600 bg-red-50 px-2 py-1 rounded border border-red-200" title="Failed Payouts">
+                {quiz.payoutStats.failed} Failed
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="relative" ref={menuRef}>
-        <button
-          onClick={() => setShowMenu(!showMenu)}
-          className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
-        >
-          <MoreVertical size={20} />
-        </button>
+      {userRole === 'BROTHER' ? (
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <MoreVertical size={20} />
+          </button>
 
-        {showMenu && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10">
-            <button
-              onClick={() => {
-                setShowMenu(false);
-                onAddQuestions(quiz);
-              }}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 flex items-center gap-2"
-            >
-              <Plus size={16} /> Add Questions
-            </button>
-            <button
-              onClick={() => {
-                setShowMenu(false);
-                onResetQuiz(quiz);
-              }}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 flex items-center gap-2"
-            >
-              <RotateCcw size={16} /> Reset Quiz
-            </button>
-          </div>
-        )}
-      </div>
+          {showMenu && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10">
+              <button
+                onClick={() => {
+                  setShowMenu(false);
+                  onAddQuestions?.(quiz);
+                }}
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 flex items-center gap-2"
+              >
+                <Plus size={16} /> Add Questions
+              </button>
+              <button
+                onClick={() => {
+                  setShowMenu(false);
+                  onResetQuiz?.(quiz);
+                }}
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 flex items-center gap-2"
+              >
+                <RotateCcw size={16} /> Reset Quiz
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <button
+          onClick={() => onSisterAction?.(quiz)}
+          className={`px-6 py-2.5 rounded-xl font-bold transition-all shadow-sm ${
+            quiz.status === 'PENDING'
+              ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+              : quiz.status === 'IN_PROGRESS'
+              ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+              : 'bg-green-100 text-green-700 hover:bg-green-200'
+          }`}
+        >
+          {quiz.status === 'PENDING' ? 'Start' : quiz.status === 'IN_PROGRESS' ? 'Continue' : 'Review'}
+        </button>
+      )}
     </div>
   );
 };

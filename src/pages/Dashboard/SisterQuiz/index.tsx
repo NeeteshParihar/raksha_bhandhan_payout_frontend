@@ -52,7 +52,7 @@ const SisterQuiz = () => {
       </div>
     );
   }
-
+  
   return (
     <div className="max-w-4xl mx-auto pb-20 mt-10">
       <div className="flex items-center gap-4 mb-8">
@@ -92,7 +92,7 @@ const SisterQuiz = () => {
             </div>
             <div className="bg-gradient-to-br from-amber-50 to-rose-50 p-4 rounded-xl border border-rose-100 text-center">
               <p className="text-sm text-rose-600 font-bold mb-1 uppercase tracking-wider">Total Amount</p>
-              <p className="font-extrabold text-3xl text-gray-900">₹{quizDetails.totalScore}</p>
+              <p className="font-extrabold text-3xl text-gray-900">₹{quizDetails.totalAmount}</p>
             </div>
           </div>
         </div>

@@ -10,6 +10,12 @@ export interface IQuiz {
   status: QuizStatus;
   createdAt?: string;
   updatedAt?: string;
+  totalAmount?: number;
+  payoutStats?: {
+    pending: number;
+    success: number;
+    failed: number;
+  };
 }
 
 export type OptionType = 'IMG' | 'TEXT';
@@ -55,8 +61,8 @@ interface ApiResponse<T> {
   data?: T;
 }
 
-export const getQuizzesOfSister = async (sisterId: string): Promise<ApiResponse<IQuiz[]>> => {
-  const response = await api.get(`/quizzes/sister/${sisterId}`);
+export const getQuizzesOfSister = async (userId: string): Promise<ApiResponse<IQuiz[]>> => {
+  const response = await api.get(`/quizzes/sister/${userId}`);
   return response.data;
 };
 
@@ -74,3 +80,39 @@ export const addQuestionToQuiz = async (quizId: string, formData: FormData): Pro
   return response.data;
 };
 
+export const QuizAction = {
+  START: "START",
+  SUBMIT: "SUBMIT",
+  RESET: "RESET"
+} as const;
+
+export type QuizAction = typeof QuizAction[keyof typeof QuizAction];
+
+
+export const performQuizAction = async (quizId: string, action: QuizAction): Promise<ApiResponse<any>> => {
+  const response = await api.patch(`/quizzes/${quizId}?action=${action}`);
+  return response.data;
+};
+
+export interface IAttemptQuestion {
+  questionId: string;
+  isCorrect: boolean;
+  amountEarned: number;
+  answers?: string[];
+}
+
+export interface IQuizAttempts {
+  questions: IAttemptQuestion[];
+  totalAmountEarned: number;
+  quizId: string;
+}
+
+export const getQuizAttempts = async (quizId: string): Promise<ApiResponse<IQuizAttempts>> => {
+  const response = await api.get(`/attempts/${quizId}`);
+  return response.data;
+};
+
+export const saveQuestionAttempt = async (quizId: string, questionId: string, answerList: string[]): Promise<ApiResponse<any>> => {
+  const response = await api.post(`/attempts/${quizId}/${questionId}`, { answerList });
+  return response.data;
+};
