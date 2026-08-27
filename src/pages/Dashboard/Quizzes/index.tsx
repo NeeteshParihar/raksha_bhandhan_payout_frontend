@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import type { SisterAccount } from '../Accounts/SisterList';
 import PickSister from '../../../components/Quizzes/PickSister';
 import QuizList from '../../../components/Quizzes/QuizList';
-import { getQuizzesOfSister, type IQuiz } from '../../../services/quiz';
+import { getQuizzesOfSister, createQuiz, deleteQuiz, type IQuiz } from '../../../services/quiz';
 
 const Quizzes = () => {
   
@@ -12,6 +12,9 @@ const Quizzes = () => {
   
   const [quizzesList, setQuizzesList] = useState<IQuiz[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newQuizTitle, setNewQuizTitle] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectSister = (sister: SisterAccount) => {
     setSelectedSister(sister);
@@ -48,11 +51,35 @@ const Quizzes = () => {
 
   // Mock functions
   const handleAddQuiz = () => {
-    console.log('Add quiz clicked');
+    setShowAddForm(true);
   };
 
-  const handleRemoveQuiz = (quiz: IQuiz) => {
-    console.log('Remove quiz clicked', quiz);
+  const handleSubmitQuiz = async () => {
+    if (!newQuizTitle.trim() || !selectedSister) return;
+    setIsSubmitting(true);
+    try {
+      const response = await createQuiz(newQuizTitle, selectedSister._id);
+      if (response.success && response.data) {
+        setQuizzesList(prev => [...prev, response.data as IQuiz]);
+        setNewQuizTitle('');
+        setShowAddForm(false);
+      }
+    } catch (error) {
+      console.error('Failed to create quiz:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRemoveQuiz = async (quiz: IQuiz) => {
+    try {
+      const response = await deleteQuiz(quiz._id);
+      if (response.success) {
+        setQuizzesList(prev => prev.filter(q => q._id !== quiz._id));
+      }
+    } catch (error) {
+      console.error('Failed to delete quiz:', error);
+    }
   };
 
   const handleAddQuestions = (quiz: IQuiz) => {
@@ -88,11 +115,45 @@ const Quizzes = () => {
             </button>
           </div>
           
+          {showAddForm && (
+            <div className="bg-gray-50 border border-gray-200 p-6 rounded-2xl mb-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-800">Create New Quiz</h3>
+                <button 
+                  onClick={() => setShowAddForm(false)} 
+                  className="text-gray-500 hover:text-gray-700 font-bold px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+              <div className="flex gap-4 items-end">
+                <div className="flex-1">
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Quiz Title</label>
+                  <input 
+                    type="text" 
+                    value={newQuizTitle} 
+                    onChange={(e) => setNewQuizTitle(e.target.value)}
+                    placeholder="e.g. Raksha Bandhan Special"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-rose-500 font-medium"
+                  />
+                </div>
+                <button 
+                  onClick={handleSubmitQuiz}
+                  disabled={isSubmitting || !newQuizTitle.trim()}
+                  className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl hover:-translate-y-1 transition-all shadow-md disabled:opacity-50 disabled:hover:translate-y-0"
+                >
+                  {isSubmitting ? 'Creating...' : 'Submit'}
+                </button>
+              </div>
+            </div>
+          )}
+          
           <QuizList 
             quizzes={quizzesList} 
             loading={loading}
             onAddQuestions={handleAddQuestions}
             onResetQuiz={handleResetQuiz}
+            onDeleteQuiz={handleRemoveQuiz}
           />
         </div>
       )}

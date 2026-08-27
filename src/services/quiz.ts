@@ -66,6 +66,16 @@ export const getQuizzesOfSister = async (userId: string): Promise<ApiResponse<IQ
   return response.data;
 };
 
+export const createQuiz = async (title: string, sisterId: string): Promise<ApiResponse<IQuiz>> => {
+  const response = await api.post(`/quizzes`, { title, sisterId });
+  return response.data;
+};
+
+export const deleteQuiz = async (quizId: string): Promise<ApiResponse<null>> => {
+  const response = await api.delete(`/quizzes/quiz/${quizId}`);
+  return response.data;
+};
+
 export const getQuizById = async (quizId: string): Promise<ApiResponse<IQuizDetails>> => {
   const response = await api.get(`/quizzes/${quizId}`);
   return response.data;

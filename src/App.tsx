@@ -14,6 +14,7 @@ import Quizzes from "./pages/Dashboard/Quizzes";
 import SisterQuiz from "./pages/Dashboard/SisterQuiz";
 import SisterMyQuizzes from "./pages/Dashboard/SisterMyQuizzes";
 import TakeQuiz from "./pages/Dashboard/TakeQuiz";
+import Payout from "./pages/Dashboard/Payout";
 import Coupons from "./pages/Dashboard/Coupons";
 import Invitation from "./pages/Dashboard/Invitation";
 
@@ -69,7 +70,8 @@ const App = () => {
         {/* You can add nested routes for Account here later */}
       </Route>
        <Route path="/sisterDashboard/myquizzes/quiz/:quizId" element={<TakeQuiz />} />
-      
+       <Route path="/sisterDashboard/myquiz/quiz/:quizId/payout" element={<Payout />} />
+       <Route path="/sisterDashboard/myquizzes/quiz/:quizId/payout" element={<Payout />} />
     </Routes>
   )
 }

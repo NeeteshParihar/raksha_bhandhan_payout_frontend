@@ -7,9 +7,10 @@ interface QuizListProps {
   loading: boolean;
   onAddQuestions: (quiz: IQuiz) => void;
   onResetQuiz: (quiz: IQuiz) => void;
+  onDeleteQuiz: (quiz: IQuiz) => void;
 }
 
-const QuizList: React.FC<QuizListProps> = ({ quizzes, loading, onAddQuestions, onResetQuiz }) => {
+const QuizList: React.FC<QuizListProps> = ({ quizzes, loading, onAddQuestions, onResetQuiz, onDeleteQuiz }) => {
   if (loading) {
     return (
       <div className="bg-white/80 backdrop-blur-md p-6 rounded-3xl shadow-sm border border-white flex justify-center py-10">
@@ -36,6 +37,7 @@ const QuizList: React.FC<QuizListProps> = ({ quizzes, loading, onAddQuestions, o
           quiz={quiz}
           onAddQuestions={onAddQuestions}
           onResetQuiz={onResetQuiz}
+          onDeleteQuiz={onDeleteQuiz}
         />
       ))}
     </div>

@@ -39,3 +39,8 @@ export const deleteCoupon = async (couponId: string): Promise<ApiResponse<null>>
   const response = await api.delete(`/coupons/${couponId}`);
   return response.data;
 };
+
+export const getCouponByCode = async (code: string): Promise<ApiResponse<ICoupon>> => {
+  const response = await api.get(`/coupons/code/${code}`);
+  return response.data;
+};

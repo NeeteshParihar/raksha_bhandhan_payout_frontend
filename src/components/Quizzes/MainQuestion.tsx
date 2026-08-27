@@ -33,6 +33,8 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
   const currentQuestion = quizDetails.questions[currentQuestionIndex];
   const attempt = attempts?.questions?.find(q => q.questionId === currentQuestion._id);
   const isAttempted = Boolean(attempt);
+  const isCompleted = quizDetails.status === 'COMPLETED';
+  const isFrozen = isAttempted || isCompleted;
 
   // Reset selected answers when question changes or prepopulate if already attempted
   useEffect(() => {
@@ -50,6 +52,7 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
   };
 
   const handleSave = async () => {
+    if (isCompleted) return;
     if (selectedAnswers.length === 0) return;
     setIsSaving(true);
     try {
@@ -125,8 +128,8 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
                 return (
                   <div 
                     key={opt._id} 
-                    onClick={() => !isAttempted && handleToggleOption(idxStr)}
-                    className={`p-4 rounded-2xl border-2 transition-all ${isSelected ? 'border-amber-500 bg-amber-50 text-amber-900 shadow-sm' : 'border-gray-100'} ${isAttempted ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-gray-200 hover:bg-gray-50'}`}
+                    onClick={() => !isFrozen && handleToggleOption(idxStr)}
+                    className={`p-4 rounded-2xl border-2 transition-all ${isSelected ? 'border-amber-500 bg-amber-50 text-amber-900 shadow-sm' : 'border-gray-100'} ${isFrozen ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-gray-200 hover:bg-gray-50'}`}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-6 h-6 shrink-0 rounded flex items-center justify-center border ${isSelected ? 'bg-amber-500 border-amber-500 text-white' : 'border-gray-300'}`}>
@@ -146,9 +149,9 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
           ) : (
             <textarea 
               rows={4}
-              disabled={isAttempted}
-              className={`w-full p-4 rounded-2xl border-2 focus:outline-none focus:border-amber-500 font-medium text-lg transition-colors ${isAttempted ? 'bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-50 border-gray-200 text-gray-700'}`}
-              placeholder={isAttempted ? "You have already attempted this question." : "Enter your answer here..."}
+              disabled={isFrozen}
+              className={`w-full p-4 rounded-2xl border-2 focus:outline-none focus:border-amber-500 font-medium text-lg transition-colors ${isFrozen ? 'bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-50 border-gray-200 text-gray-700'}`}
+              placeholder={isFrozen ? (isAttempted ? "You have already attempted this question." : "Quiz is already completed.") : "Enter your answer here..."}
               value={selectedAnswers[0] || ''}
               onChange={(e) => setSelectedAnswers([e.target.value])}
             />
@@ -157,7 +160,7 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 border-t border-gray-100 pt-6 justify-end">
-          {!isAttempted && (
+          {!isFrozen && (
             <button 
             onClick={handleSave}
             disabled={isSaving || selectedAnswers.length === 0}
