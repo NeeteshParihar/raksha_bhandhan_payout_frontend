@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerUser } from "../services/user";
 import { useDispatch } from "react-redux";
 import { login } from "../features/userProfileSlice";
+import { Button } from "../components/ui/Button";
+import { Input } from "../components/ui/Input";
 
 // Define the validation schema using Zod
 const registerSchema = z.object({
@@ -126,87 +128,43 @@ const Register = () => {
           </div>
 
           {/* Name Field */}
-          <div>
-            <label
-              className="block text-sm font-medium text-gray-700 mb-1"
-              htmlFor="name"
-            >
-              Full Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              placeholder="e.g. Rahul Sharma"
-              className={`w-full px-4 py-3 rounded-xl border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 transition-colors ${
-                errors.name ? "border-red-400" : "border-gray-200"
-              }`}
-              {...register("name")}
-            />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-            )}
-          </div>
+          <Input
+            id="name"
+            label="Full Name"
+            type="text"
+            placeholder="e.g. Rahul Sharma"
+            error={errors.name?.message}
+            {...register("name")}
+          />
 
           {/* Phone Number Field */}
-          <div>
-            <label
-              className="block text-sm font-medium text-gray-700 mb-1"
-              htmlFor="phoneNumber"
-            >
-              Phone Number
-            </label>
-            <div className="flex">
-              <span className="inline-flex items-center px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 font-medium">
-                +91
-              </span>
-              <input
-                id="phoneNumber"
-                type="tel"
-                placeholder="9876543210"
-                className={`w-full px-4 py-3 rounded-r-xl border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 transition-colors ${
-                  errors.phoneNumber ? "border-red-400" : "border-gray-200"
-                }`}
-                {...register("phoneNumber")}
-              />
-            </div>
-            {errors.phoneNumber && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.phoneNumber.message}
-              </p>
-            )}
-          </div>
+          <Input
+            id="phoneNumber"
+            label="Phone Number"
+            type="tel"
+            placeholder="9876543210"
+            prefix="+91"
+            error={errors.phoneNumber?.message}
+            {...register("phoneNumber")}
+          />
 
           {/* Password Field */}
-          <div>
-            <label
-              className="block text-sm font-medium text-gray-700 mb-1"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              className={`w-full px-4 py-3 rounded-xl border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 transition-colors ${
-                errors.password ? "border-red-400" : "border-gray-200"
-              }`}
-              {...register("password")}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+          <Input
+            id="password"
+            label="Password"
+            type="password"
+            placeholder="••••••••"
+            error={errors.password?.message}
+            {...register("password")}
+          />
 
-          <button
+          <Button
             type="submit"
-            disabled={isSubmitting}
-            className="w-full py-3.5 px-4 rounded-xl text-white font-medium bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-md transform transition hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed"
+            isLoading={isSubmitting}
+            className="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white"
           >
-            {isSubmitting ? "Creating account..." : "Sign Up"}
-          </button>
+            Sign Up
+          </Button>
         </form>
 
         <p className="text-center text-gray-500 text-sm mt-8">

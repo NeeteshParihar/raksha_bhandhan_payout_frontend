@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { loginUser, getOtp, loginByOtp } from "../../services/user";
 import { login } from "../../features/userProfileSlice";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 
 const passwordSchema = z.object({
   phoneNumber: z
@@ -217,119 +219,74 @@ export const LoginComponent = () => {
       {loginMethod === "PASSWORD" ? (
         <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-5">
           {/* Phone Number Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone Number
-            </label>
-            <div className="flex">
-              <span className="inline-flex items-center px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 font-medium">
-                +91
-              </span>
-              <input
-                type="tel"
-                placeholder="9876543210"
-                className={`w-full px-4 py-3 rounded-r-xl border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 transition-colors ${
-                  passwordErrors.phoneNumber ? "border-red-400" : "border-gray-200"
-                }`}
-                {...registerPassword("phoneNumber")}
-              />
-            </div>
-            {passwordErrors.phoneNumber && (
-              <p className="text-red-500 text-sm mt-1">{passwordErrors.phoneNumber.message}</p>
-            )}
-          </div>
+          <Input
+            label="Phone Number"
+            type="tel"
+            placeholder="9876543210"
+            prefix="+91"
+            error={passwordErrors.phoneNumber?.message}
+            {...registerPassword("phoneNumber")}
+          />
 
           {/* Password Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className={`w-full px-4 py-3 rounded-xl border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 transition-colors ${
-                passwordErrors.password ? "border-red-400" : "border-gray-200"
-              }`}
-              {...registerPassword("password")}
-            />
-            {passwordErrors.password && (
-              <p className="text-red-500 text-sm mt-1">{passwordErrors.password.message}</p>
-            )}
-          </div>
+          <Input
+            label="Password"
+            type="password"
+            placeholder="••••••••"
+            error={passwordErrors.password?.message}
+            {...registerPassword("password")}
+          />
 
-          <button
+          <Button
             type="submit"
-            disabled={isSubmitting}
-            className={`w-full py-3.5 px-4 rounded-xl text-white font-medium shadow-md transform transition hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 ${
-              role === "BROTHER" ? "bg-rose-500 hover:bg-rose-600" : "bg-amber-500 hover:bg-amber-600"
-            }`}
+            isLoading={isSubmitting}
+            variant={role === "BROTHER" ? "danger" : "primary"}
+            className={role === "SISTER" ? "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700" : ""}
           >
-            {isSubmitting ? "Logging in..." : `Log In as ${role === "BROTHER" ? "Brother" : "Sister"}`}
-          </button>
+            {`Log In as ${role === "BROTHER" ? "Brother" : "Sister"}`}
+          </Button>
         </form>
       ) : (
         <form onSubmit={handleOtpSubmit(onOtpSubmit)} className="space-y-5">
           {/* Phone Number Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone Number
-            </label>
-            <div className="flex">
-              <span className="inline-flex items-center px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 font-medium">
-                +91
-              </span>
-              <input
-                type="tel"
-                placeholder="9876543210"
-                className={`w-full px-4 py-3 rounded-r-xl border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-colors ${
-                  otpErrors.phoneNumber ? "border-red-400" : "border-gray-200"
-                }`}
-                {...registerOtp("phoneNumber")}
-              />
-            </div>
-            {otpErrors.phoneNumber && (
-              <p className="text-red-500 text-sm mt-1">{otpErrors.phoneNumber.message}</p>
-            )}
-          </div>
+          <Input
+            label="Phone Number"
+            type="tel"
+            placeholder="9876543210"
+            prefix="+91"
+            error={otpErrors.phoneNumber?.message}
+            {...registerOtp("phoneNumber")}
+          />
 
           {/* OTP Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              OTP (One Time Password)
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="123456"
-                maxLength={6}
-                className={`flex-1 px-4 py-3 rounded-xl border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-colors ${
-                  otpErrors.otp ? "border-red-400" : "border-gray-200"
-                }`}
-                {...registerOtp("otp")}
-              />
+          <Input
+            label="OTP (One Time Password)"
+            type="text"
+            placeholder="123456"
+            maxLength={6}
+            error={otpErrors.otp?.message}
+            {...registerOtp("otp")}
+            suffix={
               <button
                 type="button"
                 onClick={handleSendOtp}
                 disabled={isSubmitting || resendTimer > 0}
-                className="px-4 py-3 rounded-xl border border-amber-200 text-amber-600 font-medium bg-amber-50 hover:bg-amber-100 transition-colors whitespace-nowrap disabled:opacity-50"
+                className="px-4 py-3 border-l border-amber-200 text-amber-600 font-medium bg-amber-50 hover:bg-amber-100 transition-colors whitespace-nowrap disabled:opacity-50 h-full rounded-r-xl"
               >
                 {resendTimer > 0 ? `Resend in ${formatTime(resendTimer)}` : "Send OTP"}
               </button>
-            </div>
-            {otpErrors.otp && (
-              <p className="text-red-500 text-sm mt-1">{otpErrors.otp.message}</p>
-            )}
-          </div>
+            }
+          />
 
-          <button
+          <Button
             type="submit"
-            disabled={isSubmitting || !otpSent}
-            className={`w-full py-3.5 px-4 rounded-xl text-white font-medium shadow-md transform transition hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 ${
-              role === "BROTHER" ? "bg-rose-500 hover:bg-rose-600" : "bg-amber-500 hover:bg-amber-600"
-            }`}
+            isLoading={isSubmitting}
+            disabled={!otpSent}
+            variant={role === "BROTHER" ? "danger" : "primary"}
+            className={role === "SISTER" ? "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700" : ""}
           >
-            {isSubmitting ? "Logging in..." : `Verify & Log In`}
-          </button>
+            Verify & Log In
+          </Button>
         </form>
       )}
     </div>
