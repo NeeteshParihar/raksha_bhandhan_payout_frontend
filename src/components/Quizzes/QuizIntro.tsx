@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import type { IQuizDetails, IQuizAttempts } from '../../services/quiz';
 import { performQuizAction, QuizAction } from '../../services/quiz';
 
@@ -10,6 +11,7 @@ interface QuizIntroProps {
 }
 
 export const QuizIntro: React.FC<QuizIntroProps> = ({ quizDetails, attempts, setIsOpenQuiz, setError }) => {
+  const navigate = useNavigate();
   const [actionLoading, setActionLoading] = useState(false);
 
   const handleQuizAction = async () => {
@@ -112,8 +114,8 @@ export const QuizIntro: React.FC<QuizIntroProps> = ({ quizDetails, attempts, set
         </div>
       </div>
 
-      {/* Bottom Box: Action Button */}
-      <div className="flex justify-center pt-4">
+      {/* Bottom Box: Action Buttons */}
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
         <button 
           onClick={handleQuizAction}
           disabled={actionLoading}
@@ -127,6 +129,19 @@ export const QuizIntro: React.FC<QuizIntroProps> = ({ quizDetails, attempts, set
         >
           {actionLoading ? 'Loading...' : quizDetails.status === 'PENDING' ? 'Start Quiz' : quizDetails.status === 'IN_PROGRESS' ? 'Continue Quiz' : 'Review Quiz'}
         </button>
+
+        {/* Payout navigation button — only shown when quiz is completed */}
+        {quizDetails.status === 'COMPLETED' && (
+          <button
+            onClick={() => navigate(`/sisterDashboard/myquizzes/quiz/${quizDetails._id}/payout`)}
+            className="px-10 py-4 rounded-2xl font-bold text-lg transition-all shadow-lg text-white bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 hover:-translate-y-1 flex items-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            View Payout
+          </button>
+        )}
       </div>
     </div>
   );
