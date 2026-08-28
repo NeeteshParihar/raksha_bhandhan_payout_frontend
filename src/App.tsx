@@ -8,6 +8,7 @@ import Register from "./pages/register";
 import Login from "./pages/Login";
 import BrotherDashboard from "./components/Layouts/BrotherDashboard";
 import SisterDashboard from "./components/Layouts/SisterDashboard";
+import Overview from "./pages/Dashboard/Overview";
 import Accounts from "./pages/Dashboard/Accounts";
 
 import Quizzes from "./pages/Dashboard/Quizzes";
@@ -57,6 +58,7 @@ const App = () => {
       </Route>
 
       <Route path="/dashboard" element={<BrotherDashboard/>} >
+        <Route index element={<Overview />} />
         <Route path="accounts" element={<Accounts />} />
         <Route path="quizzes" element={<Quizzes />} />
         <Route path="coupons" element={<Coupons />} />
