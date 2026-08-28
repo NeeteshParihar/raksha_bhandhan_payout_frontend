@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { MoreVertical, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router";
+import { MoreVertical, Plus, RotateCcw, Trash2, Send } from "lucide-react";
 import type { IQuiz } from "../../services/quiz";
 
 interface QuizCardProps {
@@ -20,6 +21,7 @@ const QuizCard: React.FC<QuizCardProps> = ({
   onSisterAction,
   onDeleteQuiz,
 }) => {
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -104,13 +106,23 @@ const QuizCard: React.FC<QuizCardProps> = ({
       </div>
 
       {userRole === "BROTHER" ? (
-        <div className="relative" ref={menuRef}>
+        <div className="flex items-center gap-1 sm:gap-2">
           <button
-            onClick={() => setShowMenu(!showMenu)}
-            className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
+            onClick={() => navigate(`/dashboard/invitation/${quiz.sisterId}`)}
+            disabled={quiz.status === "COMPLETED"}
+            className="px-4 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold rounded-xl text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            title={quiz.status === "COMPLETED" ? "Completed quizzes cannot be sent" : "Send Quiz"}
           >
-            <MoreVertical size={20} />
+            <Send size={16} /> <span className="hidden sm:inline">Send</span>
           </button>
+          
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setShowMenu(!showMenu)}
+              className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <MoreVertical size={20} />
+            </button>
 
           {showMenu && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10">
@@ -148,6 +160,7 @@ const QuizCard: React.FC<QuizCardProps> = ({
             </div>
           )}
         </div>
+      </div>
       ) : (
         <button
           onClick={() => onSisterAction?.(quiz)}
