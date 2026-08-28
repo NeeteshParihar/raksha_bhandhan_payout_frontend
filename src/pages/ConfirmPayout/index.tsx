@@ -53,8 +53,7 @@ const ConfirmPayout = () => {
       setConfirming(true);
       setError('');
       const res = await updatePayoutStatus(payoutId, PayoutStatus.SUCCESS);
-      if (res.success && res.data) {
-        setPayout(res.data);
+      if (res.success && res.data) {       
         setConfirmed(true);
       }
     } catch (err: any) {
