@@ -8,6 +8,14 @@ export const PayoutStatus = {
 
 export type PayoutStatus = typeof PayoutStatus[keyof typeof PayoutStatus];
 
+export interface IUserInfo {
+  _id: string;
+  phoneNumber: string;
+  countryCode: string;
+  name: string;
+  role: string;
+}
+
 export interface IPayout {
   _id: string;
   brotherId: string;
@@ -21,6 +29,8 @@ export interface IPayout {
   createdAt: string;
   updatedAt: string;
   __v?: number;
+  sister?: IUserInfo;
+  brother?: IUserInfo;
 }
 
 interface ApiResponse<T> {
