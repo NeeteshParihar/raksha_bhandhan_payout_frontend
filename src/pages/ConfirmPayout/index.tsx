@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../features/store';
 import { getPayoutById, updatePayoutStatus, PayoutStatus, type IPayout } from '../../services/payout';
 import { BrotherLoginModal } from '../../components/Auth/BrotherLoginModal';
-import { CheckCircle2, Clock, ShieldCheck, AlertCircle } from 'lucide-react';
+import { CheckCircle2, Clock, ShieldCheck, AlertCircle, ArrowLeft } from 'lucide-react';
 
 const ConfirmPayout = () => {
   const { payoutId } = useParams<{ payoutId: string }>();
+  const navigate = useNavigate();
   const userProfile = useSelector((state: RootState) => state.userProfile.profile);
 
   const [payout, setPayout] = useState<IPayout | null>(null);
@@ -78,7 +79,13 @@ const ConfirmPayout = () => {
 
       <div className="relative z-10 w-full max-w-lg">
         {/* Brand */}
-        <div className="text-center mb-8">
+        <div className="mb-8 relative flex items-center justify-center">
+          <button 
+            onClick={() => navigate('/dashboard/quizzes')}
+            className="absolute left-0 p-2 hover:bg-white/50 rounded-full text-rose-600 transition-colors"
+          >
+            <ArrowLeft size={24} />
+          </button>
           <span className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-amber-500">
             🪔 RakhiPay
           </span>

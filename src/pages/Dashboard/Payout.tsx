@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router';
 import { getPayoutByQuiz, requestPayout,type IPayout, PayoutStatus } from '../../services/payout';
 import { getCouponByCode, type ICoupon } from '../../services/coupon';
 import { getQuizById, getQuizAttempts,type IQuizDetails, type IQuizAttempts } from '../../services/quiz';
+import { ArrowLeft } from 'lucide-react';
 
 const Payout: React.FC = () => {
   
@@ -144,10 +145,23 @@ const Payout: React.FC = () => {
   const totalAmount = quizEarnedAmount + couponAmount;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-2">
+        <button 
+          onClick={() => navigate('/sisterDashboard/myquizzes')}
+          className="p-2 hover:bg-gray-200 bg-gray-100 rounded-full text-gray-600 transition-colors"
+        >
+          <ArrowLeft size={24} />
+        </button>
+        <div>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 tracking-tight">Payout</h1>
+        </div>
+      </div>
+
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="bg-indigo-50/50 px-6 py-4 border-b border-gray-100">
-          <h1 className="text-2xl font-bold text-gray-800">Payout Details</h1>
+          <h2 className="text-xl font-bold text-gray-800">Payout Details</h2>
           {quizDetails && (
             <p className="text-gray-500 mt-1">Quiz: {quizDetails.title}</p>
           )}
