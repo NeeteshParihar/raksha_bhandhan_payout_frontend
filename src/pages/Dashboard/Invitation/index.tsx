@@ -22,6 +22,7 @@ const Invitation = () => {
   const [message, setMessage] = useState("Happy Raksha Bandhan! I've set up a fun quiz and a surprise gift for you. Play it now!");
   const [selectedQuizId, setSelectedQuizId] = useState<string>('');
   const [selectedCouponId, setSelectedCouponId] = useState<string>('');
+  const [allQuizzesCompleted, setAllQuizzesCompleted] = useState(false);
   
   const [showPreview, setShowPreview] = useState(false);
 
@@ -61,8 +62,14 @@ const Invitation = () => {
             return;
           }
           setQuizzes(quizzesRes.data);
-          // Auto-select first quiz if none selected
-          setSelectedQuizId(quizzesRes.data[0]._id);
+          // Auto-select first non-completed quiz
+          const firstAvailable = quizzesRes.data.find(q => q.status !== 'COMPLETED');
+          if (firstAvailable) {
+            setSelectedQuizId(firstAvailable._id);
+          } else {
+            // All quizzes completed — let user decide what to do
+            setAllQuizzesCompleted(true);
+          }
         }
 
         if (couponsRes.success && couponsRes.data) {
@@ -163,23 +170,57 @@ const Invitation = () => {
             <Brain size={20} className="text-rose-500" />
             Select Quiz (Required)
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {quizzes.map(quiz => (
-              <div 
-                key={quiz._id}
-                onClick={() => setSelectedQuizId(quiz._id)}
-                className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex justify-between items-center ${
-                  selectedQuizId === quiz._id ? 'border-rose-500 bg-rose-50' : 'border-gray-100 hover:border-gray-300'
-                }`}
+
+          {allQuizzesCompleted ? (
+            <div className="text-center py-6 px-4 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+              <p className="text-gray-500 font-medium mb-1">All quizzes have been completed</p>
+              <p className="text-gray-400 text-sm mb-4">Create a new quiz to send a fresh invitation.</p>
+              <button
+                onClick={() => {
+                  if (sisterId) localStorage.setItem('QUIZ-selectedSisterId', sisterId);
+                  navigate('/dashboard/quizzes');
+                }}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl transition-colors text-sm"
               >
-                <div>
-                  <p className={`font-bold ${selectedQuizId === quiz._id ? 'text-rose-700' : 'text-gray-700'}`}>{quiz.title}</p>
-                  <p className="text-xs text-gray-500 mt-1">Status: {quiz.status.replace('_', ' ')}</p>
-                </div>
-                {selectedQuizId === quiz._id && <CheckCircle2 className="text-rose-500" size={20} />}
-              </div>
-            ))}
-          </div>
+                <Brain size={16} />
+                Create New Quiz
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {quizzes.map(quiz => {
+                const isCompleted = quiz.status === 'COMPLETED';
+                const isSelected = selectedQuizId === quiz._id;
+                return (
+                  <div
+                    key={quiz._id}
+                    onClick={() => !isCompleted && setSelectedQuizId(quiz._id)}
+                    title={isCompleted ? 'This quiz has already been completed and cannot be sent again' : undefined}
+                    className={`p-4 rounded-xl border-2 transition-all flex justify-between items-center ${
+                      isCompleted
+                        ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-50'
+                        : isSelected
+                          ? 'border-rose-500 bg-rose-50 cursor-pointer'
+                          : 'border-gray-100 hover:border-gray-300 cursor-pointer'
+                    }`}
+                  >
+                    <div>
+                      <p className={`font-bold ${
+                        isCompleted ? 'text-gray-400' : isSelected ? 'text-rose-700' : 'text-gray-700'
+                      }`}>{quiz.title}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs text-gray-500">Status: {quiz.status.replace('_', ' ')}</p>
+                        {isCompleted && (
+                          <span className="text-[10px] font-semibold bg-gray-200 text-gray-500 px-1.5 py-0.5 rounded-full uppercase tracking-wide">Unavailable</span>
+                        )}
+                      </div>
+                    </div>
+                    {isSelected && !isCompleted && <CheckCircle2 className="text-rose-500" size={20} />}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Coupon Selection */}
@@ -192,7 +233,7 @@ const Invitation = () => {
             <p className="text-gray-500 italic text-sm">No active coupons available. You can create one on the Coupons page.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div 
+              <div
                 onClick={() => setSelectedCouponId('')}
                 className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex justify-between items-center ${
                   !selectedCouponId ? 'border-amber-500 bg-amber-50' : 'border-gray-100 hover:border-gray-300'
@@ -202,21 +243,37 @@ const Invitation = () => {
                 {!selectedCouponId && <CheckCircle2 className="text-amber-500" size={20} />}
               </div>
 
-              {coupons.filter(c => c.status === 'UNUSED').map(coupon => (
-                <div 
-                  key={coupon._id}
-                  onClick={() => setSelectedCouponId(coupon._id)}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex justify-between items-center ${
-                    selectedCouponId === coupon._id ? 'border-amber-500 bg-amber-50' : 'border-gray-100 hover:border-gray-300'
-                  }`}
-                >
-                  <div>
-                    <p className={`font-bold ${selectedCouponId === coupon._id ? 'text-amber-700' : 'text-gray-700'}`}>₹{coupon.amount}</p>
-                    <p className="text-xs font-mono text-gray-500 mt-1">{coupon.couponCode}</p>
+              {coupons.map(coupon => {
+                const isUsed = coupon.status === 'APPLIED';
+                const isSelected = selectedCouponId === coupon._id;
+                return (
+                  <div
+                    key={coupon._id}
+                    onClick={() => !isUsed && setSelectedCouponId(coupon._id)}
+                    title={isUsed ? 'This coupon has already been used' : undefined}
+                    className={`p-4 rounded-xl border-2 transition-all flex justify-between items-center ${
+                      isUsed
+                        ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-50'
+                        : isSelected
+                          ? 'border-amber-500 bg-amber-50 cursor-pointer'
+                          : 'border-gray-100 hover:border-gray-300 cursor-pointer'
+                    }`}
+                  >
+                    <div>
+                      <p className={`font-bold ${
+                        isUsed ? 'text-gray-400' : isSelected ? 'text-amber-700' : 'text-gray-700'
+                      }`}>₹{coupon.amount}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs font-mono text-gray-500">{coupon.couponCode}</p>
+                        {isUsed && (
+                          <span className="text-[10px] font-semibold bg-gray-200 text-gray-500 px-1.5 py-0.5 rounded-full uppercase tracking-wide">Used</span>
+                        )}
+                      </div>
+                    </div>
+                    {isSelected && !isUsed && <CheckCircle2 className="text-amber-500" size={20} />}
                   </div>
-                  {selectedCouponId === coupon._id && <CheckCircle2 className="text-amber-500" size={20} />}
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -225,7 +282,7 @@ const Invitation = () => {
         <div className="flex justify-end pt-4">
           <button 
             onClick={() => setShowPreview(true)}
-            disabled={!selectedQuizId}
+            disabled={!selectedQuizId || allQuizzesCompleted}
             className="px-8 py-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-extrabold rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center gap-2 disabled:opacity-50 text-lg"
           >
             <Send size={20} />
