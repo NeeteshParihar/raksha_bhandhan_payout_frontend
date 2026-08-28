@@ -74,6 +74,10 @@ const SisterForm: React.FC<SisterFormProps> = ({ add }) => {
           {addError}
         </div>
       )}
+
+      <p className="mt-4 text-sm text-gray-500 font-medium italic">
+        Note: The default password for the sister account is her phone number.
+      </p>
     </div>
   );
 };
