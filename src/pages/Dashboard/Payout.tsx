@@ -193,11 +193,11 @@ const Payout: React.FC = () => {
                     const sisterName = payout.sister!.name;
                     const brotherPhone = `${payout.brother!.countryCode.replace('+', '')}${payout.brother!.phoneNumber}`;
                     const upiLink = `upi://pay?pa=${encodeURIComponent(payout.upiId || '')}&pn=${encodeURIComponent(sisterName)}&am=${payout.totalAmount}&cu=INR&tn=${encodeURIComponent(`Rakhi gift from ${sisterName}`)}`;
-                    const serverLink =encodeURI( `${import.meta.env.VITE_API_URL}/payouts/pay?pa=${upiId}&pn=${sisterName}&am=${totalAmount}`);                    
+                    const serverLink = `${import.meta.env.VITE_API_URL}/payouts/pay?pa=${encodeURIComponent(payout.upiId || '')}&pn=${encodeURIComponent(sisterName)}&am=${payout.totalAmount}`;
                     const confirmLink = `${window.location.origin}/payout/${payout._id}/confirm`;
                     const message = `🎀 Happy Raksha Bandhan, bhaiya! 💛\n\nI'm ${sisterName} and I've completed my rakhi quiz! My payout of ₹${payout.totalAmount} is still pending. 🙏\n\nPlease send the Rakhi money via UPI:\n${upiLink}\n\nUPI ID: ${payout.upiId || 'N/A'}\nAmount: ₹${payout.totalAmount}\n\n or \n\n Pay using this link \n\n ${serverLink} \n\n Once you've paid, please tap the link below to confirm the payment ✅\n${confirmLink}\n\nLove you bhaiya! 🌸`;
                     const whatsappUrl = `https://wa.me/${brotherPhone}?text=${encodeURIComponent(message)}`;
-                    
+
                     return (
                       <a
                         href={whatsappUrl}
