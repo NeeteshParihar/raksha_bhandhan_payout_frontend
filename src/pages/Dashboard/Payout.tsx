@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Meta } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import { getPayoutByQuiz, requestPayout,type IPayout, PayoutStatus } from '../../services/payout';
 import { getCouponByCode, type ICoupon } from '../../services/coupon';
 import { getQuizById, getQuizAttempts,type IQuizDetails, type IQuizAttempts } from '../../services/quiz';
