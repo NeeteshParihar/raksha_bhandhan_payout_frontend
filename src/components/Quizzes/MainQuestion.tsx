@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import React from 'react';
 import { createPortal } from 'react-dom';
 import type { IQuizDetails, IQuizAttempts } from '../../services/quiz';
-import { saveQuestionAttempt, getQuizAttempts, performQuizAction, QuizAction } from '../../services/quiz';
 import QuizSummaryCard from './QuizSummaryCard';
+import { useMainQuestion } from './hooks/useMainQuestion';
 
 interface MainQuestionProps {
   quizDetails: IQuizDetails;
@@ -18,79 +17,22 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
   attempts,
   setAttempts,
   currentQuestionIndex,
-  // setCurrentQuestionIndex
 }) => {
-  const navigate = useNavigate();
-  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
-  const [isSaving, setIsSaving] = useState(false);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [feedbackType, setFeedbackType] = useState<'CORRECT' | 'WRONG' | null>(null);
-  // this creates a portal on window to display summay and a confirm submit button
-  const [showSubmitModal, setShowSubmitModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const currentQuestion = quizDetails.questions[currentQuestionIndex];
-  const attempt = attempts?.questions?.find(q => q.questionId === currentQuestion._id);
-  const isAttempted = Boolean(attempt);
-  const isCompleted = quizDetails.status === 'COMPLETED';
-  const isFrozen = isAttempted || isCompleted;
-
-  // Reset selected answers when question changes or prepopulate if already attempted
-  useEffect(() => {
-    if (attempt && attempt.answers) {
-      setSelectedAnswers(attempt.answers);
-    } else {
-      setSelectedAnswers([]);
-    }
-  }, [currentQuestionIndex, attempts, currentQuestion._id, attempt]);
-
-  const handleToggleOption = (indexStr: string) => {
-    setSelectedAnswers(prev => 
-      prev.includes(indexStr) ? prev.filter(a => a !== indexStr) : [...prev, indexStr]
-    );
-  };
-
-  const handleSave = async () => {
-    if (isCompleted) return;
-    if (selectedAnswers.length === 0) return;
-    setIsSaving(true);
-    try {
-      const response = await saveQuestionAttempt(quizDetails._id, currentQuestion._id, selectedAnswers);
-      
-      // Determine if correct from response and show feedback
-      const isCorrect = response.data?.isCorrect;
-      setFeedbackType(isCorrect ? 'CORRECT' : 'WRONG');
-      setShowFeedback(true);
-      
-      // Reset feedback overlay after 2 seconds
-      setTimeout(() => {
-        setShowFeedback(false);
-      }, 3000);
-
-      const attemptsRes = await getQuizAttempts(quizDetails._id);
-      if (attemptsRes && attemptsRes.data) {
-        setAttempts(attemptsRes.data);
-      }
-      
-      // Removed auto-increment so the user stays on the question to see feedback
-    } catch (err) {
-      console.error("Failed to save attempt", err);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleSubmitConfirm = async () => {
-    setIsSubmitting(true);
-    try {
-      await performQuizAction(quizDetails._id, QuizAction.SUBMIT);
-      navigate(`/sisterDashboard/myquizzes/quiz/${quizDetails._id}/payout`);
-    } catch (error) {
-      console.error("Failed to submit quiz", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const {
+    navigate,
+    selectedAnswers, setSelectedAnswers,
+    isSaving,
+    showFeedback,
+    feedbackType,
+    showSubmitModal, setShowSubmitModal,
+    isSubmitting,
+    currentQuestion,
+    isAttempted,
+    isFrozen,
+    handleToggleOption,
+    handleSave,
+    handleSubmitConfirm
+  } = useMainQuestion(quizDetails, attempts, setAttempts, currentQuestionIndex);
 
   return (
     <>
