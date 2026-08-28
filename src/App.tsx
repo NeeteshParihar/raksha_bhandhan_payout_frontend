@@ -19,6 +19,7 @@ import Payout from "./pages/Dashboard/Payout";
 import Coupons from "./pages/Dashboard/Coupons";
 import Invitation from "./pages/Dashboard/Invitation";
 import ConfirmPayout from "./pages/ConfirmPayout";
+import SharedAccount from "./pages/Dashboard/SharedAccount";
 
 // import services & actions
 import { fetchUserProfile } from "./services/user";
@@ -62,6 +63,7 @@ const App = () => {
         <Route path="accounts" element={<Accounts />} />
         <Route path="quizzes" element={<Quizzes />} />
         <Route path="coupons" element={<Coupons />} />
+        <Route path="profile" element={<SharedAccount />} />
       </Route>
         <Route path="/dashboard/invitation/:sisterId" element={<Invitation />} />
       <Route path="/dashboard/quizzes/:quizId" element={<SisterQuiz />} />
@@ -69,8 +71,7 @@ const App = () => {
       <Route path="/sisterDashboard" element={<SisterDashboard />}>
         <Route index element={<Navigate to="myquizzes" replace />} />
         <Route path="myquizzes" element={<SisterMyQuizzes />} />
-       
-        {/* You can add nested routes for Account here later */}
+        <Route path="account" element={<SharedAccount />} />
       </Route>
        <Route path="/sisterDashboard/myquizzes/quiz/:quizId" element={<TakeQuiz />} />
        <Route path="/sisterDashboard/myquiz/quiz/:quizId/payout" element={<Payout />} />

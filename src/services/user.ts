@@ -138,3 +138,13 @@ export const logoutUser = async () => {
     throw error;
   }
 }
+
+export const updatePassword = async (password: string, confirmPassword: string) => {
+  try {
+    const response = await api.put('/users/update-password', { password, confirmPassword });
+    return response.data;
+  } catch (error) {
+    console.error('Error in updatePassword service:', error);
+    throw error;
+  }
+}
