@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
 import type { RootState } from '../../../features/store';
-import { updatePassword } from '../../../services/user';
-import { User, Phone, Shield, KeyRound, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { updatePassword, logoutUser } from '../../../services/user';
+import { logout } from '../../../features/userProfileSlice';
+import { User, Phone, Shield, KeyRound, AlertCircle, CheckCircle2, LogOut } from 'lucide-react';
 
 const SharedAccount: React.FC = () => {
   const user = useSelector((state: RootState) => state.userProfile.profile);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -51,6 +55,17 @@ const SharedAccount: React.FC = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error('Logout API call failed:', error);
+    } finally {
+      dispatch(logout());
+      navigate('/');
+    }
+  };
+
   if (!user) {
     return (
       <div className="flex justify-center items-center h-full min-h-[50vh]">
@@ -62,9 +77,18 @@ const SharedAccount: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto pb-20 mt-4 md:mt-10 px-4 md:px-0 space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight">Account Settings</h1>
-        <p className="text-gray-500 font-medium text-sm mt-1">Manage your profile and security</p>
+      <div className="flex justify-between items-center flex-wrap gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight">Account Settings</h1>
+          <p className="text-gray-500 font-medium text-sm mt-1">Manage your profile and security</p>
+        </div>
+        <button 
+          onClick={handleLogout}
+          className="px-5 py-2.5 bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 font-bold rounded-xl transition-colors flex items-center gap-2 shadow-sm border border-rose-100 md:hidden"
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
       </div>
 
       {/* User Information Card */}
