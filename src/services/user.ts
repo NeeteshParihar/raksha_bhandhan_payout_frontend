@@ -22,6 +22,27 @@ export const registerBrother = async (data: RegisterBrotherData) => {
     }
   }
 
+export interface RegisterUserData {
+  name: string;
+  phoneNumber: string;
+  password: string;
+  role: 'BROTHER' | 'SISTER';
+  countryCode?: string;
+}
+
+export const registerUser = async (data: RegisterUserData) => {
+  try {
+    const response = await api.post('/users/register-user', {
+      ...data,
+      countryCode: data.countryCode || '+91',
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error in registerUser service:', error);
+    throw error;
+  }
+}
+
 export interface LoginUserData {
   phoneNumber: string;
   password: string;

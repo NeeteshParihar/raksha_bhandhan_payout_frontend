@@ -4,7 +4,9 @@ import type { SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerBrother } from "../services/user";
+import { registerUser } from "../services/user";
+import { useDispatch } from "react-redux";
+import { login } from "../features/userProfileSlice";
 
 // Define the validation schema using Zod
 const registerSchema = z.object({
@@ -18,6 +20,7 @@ const registerSchema = z.object({
     .min(10, "Phone number must be at least 10 digits")
     .max(12, "Phone number cannot exceed 12 digits"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["BROTHER", "SISTER"]),
 });
 
 // Infer the type for the form fields from the schema
@@ -34,15 +37,24 @@ const Register = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Function for registration
   const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
     try {
       setIsSubmitting(true);
       setError("");
-      await registerBrother(data);
-     console.log("registered successfully!");
-      navigate('/');
+      const response = await registerUser(data);
+      console.log("registered successfully!");
+      if (response.success && response.data) {
+        dispatch(login(response.data));
+      }
+      
+      if (data.role === 'BROTHER') {
+        navigate('/dashboard');
+      } else {
+        navigate('/sisterDashboard');
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || "Failed to register. Please try again.");
     } finally {
@@ -79,6 +91,40 @@ const Register = () => {
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Role Selection */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              I am a...
+            </label>
+            <div className="flex gap-4">
+              <label className="flex-1 cursor-pointer relative">
+                <input
+                  type="radio"
+                  value="BROTHER"
+                  className="peer sr-only"
+                  {...register("role")}
+                />
+                <div className="text-center px-4 py-3 rounded-xl border bg-white/50 text-gray-600 font-medium transition-all peer-checked:border-rose-500 peer-checked:bg-rose-50 peer-checked:text-rose-700 peer-focus:ring-2 peer-focus:ring-rose-400 hover:bg-white">
+                  Brother
+                </div>
+              </label>
+              <label className="flex-1 cursor-pointer relative">
+                <input
+                  type="radio"
+                  value="SISTER"
+                  className="peer sr-only"
+                  {...register("role")}
+                />
+                <div className="text-center px-4 py-3 rounded-xl border bg-white/50 text-gray-600 font-medium transition-all peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700 peer-focus:ring-2 peer-focus:ring-amber-400 hover:bg-white">
+                  Sister
+                </div>
+              </label>
+            </div>
+            {errors.role && (
+              <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+            )}
+          </div>
+
           {/* Name Field */}
           <div>
             <label
