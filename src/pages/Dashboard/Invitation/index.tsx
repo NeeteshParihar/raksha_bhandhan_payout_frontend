@@ -105,7 +105,7 @@ const Invitation = () => {
   }
 
   const getQuizLink = () => {
-    return `${window.location.origin}/sisterDashboard/quiz/${selectedQuizId}`;
+    return `${window.location.origin}/sisterDashboard/myquizzes/quiz/${selectedQuizId}`;
   };
 
   const generateFinalMessage = () => {
