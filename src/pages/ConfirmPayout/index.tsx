@@ -18,7 +18,6 @@ const ConfirmPayout = () => {
   const [agreed, setAgreed] = useState(false);
 
   const isLoggedIn = !!userProfile;
-  const isBrother = userProfile?.role === 'BROTHER';
 
   const fetchPayout = async () => {
     if (!payoutId) return;
