@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useParams, useNavigate, Meta } from 'react-router';
 import { getPayoutByQuiz, requestPayout,type IPayout, PayoutStatus } from '../../services/payout';
 import { getCouponByCode, type ICoupon } from '../../services/coupon';
 import { getQuizById, getQuizAttempts,type IQuizDetails, type IQuizAttempts } from '../../services/quiz';
@@ -193,8 +193,9 @@ const Payout: React.FC = () => {
                     const sisterName = payout.sister!.name;
                     const brotherPhone = `${payout.brother!.countryCode.replace('+', '')}${payout.brother!.phoneNumber}`;
                     const upiLink = `upi://pay?pa=${encodeURIComponent(payout.upiId || '')}&pn=${encodeURIComponent(sisterName)}&am=${payout.totalAmount}&cu=INR&tn=${encodeURIComponent(`Rakhi gift from ${sisterName}`)}`;
+                    const serverLink = `${import.meta.env.VITE_API_URL}/api/payouts/pay?pa=${upiId}&pn=${sisterName}&am=${totalAmount}`
                     const confirmLink = `${window.location.origin}/payout/${payout._id}/confirm`;
-                    const message = `🎀 Happy Raksha Bandhan, bhaiya! 💛\n\nI'm ${sisterName} and I've completed my rakhi quiz! My payout of ₹${payout.totalAmount} is still pending. 🙏\n\nPlease send the Rakhi money via UPI:\n${upiLink}\n\nUPI ID: ${payout.upiId || 'N/A'}\nAmount: ₹${payout.totalAmount}\n\nOnce you've paid, please tap the link below to confirm the payment ✅\n${confirmLink}\n\nLove you bhaiya! 🌸`;
+                    const message = `🎀 Happy Raksha Bandhan, bhaiya! 💛\n\nI'm ${sisterName} and I've completed my rakhi quiz! My payout of ₹${payout.totalAmount} is still pending. 🙏\n\nPlease send the Rakhi money via UPI:\n${upiLink}\n\nUPI ID: ${payout.upiId || 'N/A'}\nAmount: ₹${payout.totalAmount}\n\n or Pay using this link ${serverLink} \n\n Once you've paid, please tap the link below to confirm the payment ✅\n${confirmLink}\n\nLove you bhaiya! 🌸`;
                     const whatsappUrl = `https://wa.me/${brotherPhone}?text=${encodeURIComponent(message)}`;
 
                     return (
