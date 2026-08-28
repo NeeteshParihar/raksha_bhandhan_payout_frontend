@@ -94,7 +94,7 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
 
   return (
     <>
-      <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
+      <div className="bg-white p-4 sm:p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
         <div className="mb-6">
           <p className="text-xl font-medium text-gray-800 leading-relaxed">{currentQuestion.quesDesc}</p>
         </div>
@@ -158,25 +158,25 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 border-t border-gray-100 pt-6 justify-end">
+        <div className="flex flex-col sm:flex-row gap-3 border-t border-gray-100 pt-6 justify-end mt-4">
           <button 
             onClick={handleSave}
             disabled={isFrozen || isSaving || selectedAnswers.length === 0}
-            className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 hover:-translate-y-1"
+            className="w-full sm:w-auto px-8 py-4 sm:py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 hover:-translate-y-1 text-lg sm:text-base"
           >
             {isSaving ? 'Saving...' : 'Save Answer'}
           </button>
           {quizDetails.status === 'COMPLETED' ? (
             <button 
               onClick={() => navigate(`/sisterDashboard/myquizzes/quiz/${quizDetails._id}/payout`)}
-              className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl hover:-translate-y-1 transition-all shadow-md hover:shadow-lg"
+              className="w-full sm:w-auto px-8 py-4 sm:py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl hover:-translate-y-1 transition-all shadow-md hover:shadow-lg text-lg sm:text-base"
             >
               Go to Payout
             </button>
           ) : (
             <button 
               onClick={() => setShowSubmitModal(true)}
-              className="px-8 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-bold rounded-xl hover:-translate-y-1 transition-all shadow-md hover:shadow-lg"
+              className="w-full sm:w-auto px-8 py-4 sm:py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-bold rounded-xl hover:-translate-y-1 transition-all shadow-md hover:shadow-lg text-lg sm:text-base"
             >
               Submit Quiz
             </button>

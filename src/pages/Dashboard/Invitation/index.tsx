@@ -125,7 +125,7 @@ const Invitation = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto pb-20 mt-10">
+    <div className="max-w-4xl mx-auto pb-20 mt-4 md:mt-10">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <button 
@@ -283,7 +283,7 @@ const Invitation = () => {
           <button 
             onClick={() => setShowPreview(true)}
             disabled={!selectedQuizId || allQuizzesCompleted}
-            className="px-8 py-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-extrabold rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center gap-2 disabled:opacity-50 text-lg"
+            className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-extrabold rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 text-lg"
           >
             <Send size={20} />
             Preview & Send

@@ -123,7 +123,7 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({ quizId, onSuccess }) =>
   };
 
   return (
-    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-10">
+    <div className="bg-white p-4 sm:p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 mb-10">
       <div className="mb-6 border-b border-gray-100 pb-4">
         <h3 className="text-2xl font-bold text-gray-800">Create New Question</h3>
         <p className="text-gray-500 mt-1 font-medium">Add a new question to this quiz.</p>
@@ -235,7 +235,7 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({ quizId, onSuccess }) =>
             <OptionsManager options={options} setOptions={setOptions} />
           ) : (
             <div className="space-y-4">
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="text"
                   value={currentTextAnswer}
@@ -252,7 +252,7 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({ quizId, onSuccess }) =>
                 <button
                   type="button"
                   onClick={handleAddTextAnswer}
-                  className="px-6 py-4 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-colors"
+                  className="w-full sm:w-auto px-6 py-4 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-colors"
                 >
                   Add
                 </button>
@@ -273,11 +273,11 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({ quizId, onSuccess }) =>
           )}
         </div>
 
-        <div className="pt-6 flex justify-end border-t border-gray-100">
+        <div className="pt-6 flex justify-end border-t border-gray-100 mt-4">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-8 py-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-extrabold rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center gap-2 disabled:opacity-70 text-lg"
+            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-extrabold rounded-2xl shadow-sm hover:shadow-md transition-all flex justify-center items-center gap-2 disabled:opacity-70 text-lg"
           >
             {isSubmitting ? (
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

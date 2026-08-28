@@ -66,7 +66,7 @@ const QuizCard: React.FC<QuizCardProps> = ({
   };
 
   return (
-    <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all flex items-center justify-between group">
+    <div className="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 group">
       <div>
         <h3 className="text-lg font-bold text-gray-800">{quiz.title}</h3>
         <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -106,14 +106,14 @@ const QuizCard: React.FC<QuizCardProps> = ({
       </div>
 
       {userRole === "BROTHER" ? (
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 border-gray-100 pt-3 md:pt-0">
           <button
             onClick={() => navigate(`/dashboard/invitation/${quiz.sisterId}`)}
             disabled={quiz.status === "COMPLETED"}
-            className="px-4 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold rounded-xl text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold rounded-xl text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title={quiz.status === "COMPLETED" ? "Completed quizzes cannot be sent" : "Send Quiz"}
           >
-            <Send size={16} /> <span className="hidden sm:inline">Send</span>
+            <Send size={16} /> <span>Send</span>
           </button>
           
           <div className="relative" ref={menuRef}>
@@ -164,7 +164,7 @@ const QuizCard: React.FC<QuizCardProps> = ({
       ) : (
         <button
           onClick={() => onSisterAction?.(quiz)}
-          className={`px-6 py-2.5 rounded-xl font-bold transition-all shadow-sm ${
+          className={`w-full md:w-auto px-6 py-3 md:py-2.5 rounded-xl font-bold transition-all shadow-sm ${
             quiz.status === "PENDING"
               ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
               : quiz.status === "IN_PROGRESS"

@@ -59,7 +59,7 @@ const SisterForm: React.FC<SisterFormProps> = ({ add }) => {
         <button 
           type="submit"
           disabled={isAdding || !name || !phone}
-          className="px-8 py-3 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-bold rounded-2xl shadow-md transform transition hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center min-w-[120px]"
+          className="w-full md:w-auto px-8 py-4 md:py-3 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-bold rounded-2xl shadow-md transform transition hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center min-w-[120px] text-lg md:text-base"
         >
           {isAdding ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
