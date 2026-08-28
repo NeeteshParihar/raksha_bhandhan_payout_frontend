@@ -44,10 +44,10 @@ const UpiForm: React.FC<UpiFormProps> = ({
       <div className="flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="w-full md:w-1/2">
           <h2 className="text-lg font-medium text-indigo-100 mb-1">Total Payout Amount</h2>
-          <div className="flex items-baseline gap-2 mb-4">
-            <span className="text-4xl font-bold">₹{totalAmount}</span>
+          <div className="flex items-baseline gap-2 mb-4 flex-wrap">
+            <span className="text-3xl sm:text-4xl font-bold">₹{totalAmount}</span>
             {couponAmount > 0 && (
-              <span className="text-indigo-200 text-sm">(₹{quizEarnedAmount} + ₹{couponAmount})</span>
+              <span className="text-indigo-200 text-xs sm:text-sm">(₹{quizEarnedAmount} + ₹{couponAmount})</span>
             )}
           </div>
           <div className="flex flex-col">
@@ -67,7 +67,7 @@ const UpiForm: React.FC<UpiFormProps> = ({
           <button
             onClick={handleRequestPayout}
             disabled={isRequestingPayout || totalAmount <= 0 || !upiId.trim()}
-            className="bg-white text-indigo-600 hover:bg-indigo-50 font-bold py-3 px-8 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:hover:translate-y-0"
+            className="bg-white text-indigo-600 hover:bg-indigo-50 font-bold py-3 px-4 sm:px-8 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:hover:translate-y-0 w-full md:w-auto"
           >
             {isRequestingPayout ? 'Processing...' : 'Request Rakhi Money'}
           </button>

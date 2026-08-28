@@ -15,7 +15,7 @@ const Hero = () => {
         <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-rose-100 border border-rose-200 text-rose-700 text-sm font-semibold tracking-wide">
           ✨ The Modern Way to Gift
         </div>
-        <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-amber-500 tracking-tight mb-6">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-amber-500 tracking-tight mb-6">
           Celebrate the Bond of Protection
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600 mb-10">
