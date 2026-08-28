@@ -107,14 +107,23 @@ const QuizCard: React.FC<QuizCardProps> = ({
 
       {userRole === "BROTHER" ? (
         <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 border-gray-100 pt-3 md:pt-0">
-          <button
-            onClick={() => navigate(`/dashboard/invitation/${quiz.sisterId}`)}
-            disabled={quiz.status === "COMPLETED" || (quiz.questions && quiz.questions.length === 0)}
-            className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold rounded-xl text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title={quiz.status === "COMPLETED" ? "Completed quizzes cannot be sent" : (quiz.questions && quiz.questions.length === 0) ? "Add questions before sending" : "Send Quiz"}
-          >
-            <Send size={16} /> <span>Send</span>
-          </button>
+          {(!quiz.questions || quiz.questions.length === 0) ? (
+            <button
+              disabled
+              className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-gray-50 text-gray-500 font-bold rounded-xl text-sm flex items-center gap-2 cursor-not-allowed border border-gray-200"
+            >
+              Add at least one question
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate(`/dashboard/invitation/${quiz.sisterId}`)}
+              disabled={quiz.status === "COMPLETED"}
+              className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold rounded-xl text-sm flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title={quiz.status === "COMPLETED" ? "Completed quizzes cannot be sent" : "Send Quiz"}
+            >
+              <Send size={16} /> <span>Send</span>
+            </button>
+          )}
           
           <div className="relative" ref={menuRef}>
             <button
@@ -164,8 +173,8 @@ const QuizCard: React.FC<QuizCardProps> = ({
       ) : (
         <button
           onClick={() => onSisterAction?.(quiz)}
-          disabled={quiz.status !== "COMPLETED" && (quiz.questions && quiz.questions.length === 0)}
-          title={(quiz.status !== "COMPLETED" && quiz.questions && quiz.questions.length === 0) ? "Quiz has no questions" : ""}
+          disabled={quiz.status !== "COMPLETED" && (!quiz.questions || quiz.questions.length === 0)}
+          title={(quiz.status !== "COMPLETED" && (!quiz.questions || quiz.questions.length === 0)) ? "Quiz has no questions" : ""}
           className={`w-full md:w-auto px-6 py-3 md:py-2.5 rounded-xl font-bold transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
             quiz.status === "PENDING"
               ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
