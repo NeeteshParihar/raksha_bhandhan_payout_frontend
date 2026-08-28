@@ -159,15 +159,13 @@ const MainQuestion: React.FC<MainQuestionProps> = ({
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 border-t border-gray-100 pt-6 justify-end">
-          {!isFrozen && (
-            <button 
+          <button 
             onClick={handleSave}
-            disabled={isSaving || selectedAnswers.length === 0}
-            className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl hover:-translate-y-1 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:hover:translate-y-0"
+            disabled={isFrozen || isSaving || selectedAnswers.length === 0}
+            className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 hover:-translate-y-1"
           >
             {isSaving ? 'Saving...' : 'Save Answer'}
           </button>
-          )}
           {quizDetails.status === 'COMPLETED' ? (
             <button 
               onClick={() => navigate(`/sisterDashboard/myquizzes/quiz/${quizDetails._id}/payout`)}
