@@ -17,6 +17,7 @@ import TakeQuiz from "./pages/Dashboard/TakeQuiz";
 import Payout from "./pages/Dashboard/Payout";
 import Coupons from "./pages/Dashboard/Coupons";
 import Invitation from "./pages/Dashboard/Invitation";
+import ConfirmPayout from "./pages/ConfirmPayout";
 
 // import services & actions
 import { fetchUserProfile } from "./services/user";
@@ -72,6 +73,7 @@ const App = () => {
        <Route path="/sisterDashboard/myquizzes/quiz/:quizId" element={<TakeQuiz />} />
        <Route path="/sisterDashboard/myquiz/quiz/:quizId/payout" element={<Payout />} />
        <Route path="/sisterDashboard/myquizzes/quiz/:quizId/payout" element={<Payout />} />
+       <Route path="/payout/:payoutId/confirm" element={<ConfirmPayout />} />
     </Routes>
   )
 }

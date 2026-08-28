@@ -49,3 +49,14 @@ export const requestPayout = async (quizId: string, data: { couponCode?: string;
   const response = await api.post(`/payouts/${quizId}`, data);
   return response.data;
 };
+
+export const getPayoutById = async (payoutId: string): Promise<ApiResponse<IPayout>> => {
+  const response = await api.get(`/payouts/payout/${payoutId}`);
+  return response.data;
+};
+
+export const updatePayoutStatus = async (payoutId: string, status: PayoutStatus): Promise<ApiResponse<IPayout>> => {
+  const response = await api.patch(`/payouts/${payoutId}/status`, { status });
+  return response.data;
+};
+
