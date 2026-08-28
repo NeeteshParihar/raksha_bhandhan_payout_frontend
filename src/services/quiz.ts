@@ -16,6 +16,7 @@ export interface IQuiz {
     success: number;
     failed: number;
   };
+  questions?: any[];
 }
 
 export type OptionType = 'IMG' | 'TEXT';
