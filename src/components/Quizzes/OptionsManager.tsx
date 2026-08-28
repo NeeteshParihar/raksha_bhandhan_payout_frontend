@@ -141,7 +141,7 @@ const OptionsManager: React.FC<OptionsManagerProps> = ({ options, setOptions }) 
               <div>
                 <input 
                   type="file" 
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/jpg, image/webp, image/gif"
                   ref={fileInputRef}
                   onChange={(e) => {
                     if (e.target.files && e.target.files.length > 0) {

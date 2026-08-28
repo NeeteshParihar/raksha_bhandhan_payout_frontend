@@ -195,7 +195,7 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({ quizId, onSuccess }) =>
                 <span className="truncate">{questionMedia ? questionMedia.name : 'Upload Image'}</span>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/jpg, image/webp"
                   ref={mediaInputRef}
                   className="hidden"
                   onChange={(e) => {
