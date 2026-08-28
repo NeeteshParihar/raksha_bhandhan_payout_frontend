@@ -141,7 +141,7 @@ export const logoutUser = async () => {
 
 export const updatePassword = async (password: string, confirmPassword: string) => {
   try {
-    const response = await api.put('/users/update-password', { password, confirmPassword });
+    const response = await api.patch('/users/update-password', { password, confirmPassword });
     return response.data;
   } catch (error) {
     console.error('Error in updatePassword service:', error);
