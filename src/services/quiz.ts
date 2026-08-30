@@ -1,6 +1,7 @@
 import api from './api';
 
 export type QuizStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+export type QuizState = 'DRAFT' | 'READY';
 
 export interface IQuiz {
   _id: string;
@@ -8,6 +9,7 @@ export interface IQuiz {
   brotherId: string;
   sisterId: string;
   status: QuizStatus;
+  quizState?: QuizState;
   createdAt?: string;
   updatedAt?: string;
   totalAmount?: number;
@@ -62,8 +64,10 @@ interface ApiResponse<T> {
   data?: T;
 }
 
-export const getQuizzesOfSister = async (userId: string): Promise<ApiResponse<IQuiz[]>> => {
-  const response = await api.get(`/quizzes/sister/${userId}`);
+export const getQuizzesOfSister = async (userId: string, quizStates: string[] = ["READY"], quizStatuses: string[] = ['PENDING', 'IN_PROGRESS', 'COMPLETED']): Promise<ApiResponse<IQuiz[]>> => {
+  const statesQuery = quizStates.join('-');
+  const statusesQuery = quizStatuses.join('-');
+  const response = await api.get(`/quizzes/sister/${userId}?quizStates=${statesQuery}&statuses=${statusesQuery}`);
   return response.data;
 };
 

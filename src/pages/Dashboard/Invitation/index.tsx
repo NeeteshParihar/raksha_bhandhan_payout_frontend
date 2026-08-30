@@ -50,20 +50,15 @@ const Invitation = () => {
 
         // Fetch Quizzes and Coupons in parallel
         const [quizzesRes, couponsRes] = await Promise.all([
-          getQuizzesOfSister(sisterId),
+          getQuizzesOfSister(sisterId, ["READY"], ["PENDING", "IN_PROGRESS"]),
           getCouponsOfSister(sisterId)
         ]);
 
         if (quizzesRes.success && quizzesRes.data) {
-          if (quizzesRes.data.length === 0) {
-            // No quizzes -> redirect to quizzes page to create one
-            localStorage.setItem('QUIZ-selectedSisterId', sisterId);
-            navigate('/dashboard/quizzes');
-            return;
-          }
+         
           setQuizzes(quizzesRes.data);
           // Auto-select first non-completed quiz
-          const firstAvailable = quizzesRes.data.find(q => q.status !== 'COMPLETED');
+          const firstAvailable = quizzesRes.data.find(q => q.status !== 'COMPLETED' && q.quizState !== "DRAFT");
           if (firstAvailable) {
             setSelectedQuizId(firstAvailable._id);
           } else {
@@ -124,6 +119,11 @@ const Invitation = () => {
     window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
   };
 
+const handleQuizChoose = (quiz: IQuiz) => {
+    if( quiz.status === "COMPLETED" || quiz.quizState === "DRAFT" ) return;
+    setSelectedQuizId(quiz._id)
+  }
+
   return (
     <div className="max-w-4xl mx-auto pb-20 mt-4 md:mt-10">
       {/* Header */}
@@ -166,14 +166,25 @@ const Invitation = () => {
 
         {/* Quiz Selection */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2 mb-4">
-            <Brain size={20} className="text-rose-500" />
-            Select Quiz (Required)
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <Brain size={20} className="text-rose-500" />
+              Select Quiz (Required)
+            </h2>
+            <button
+              onClick={() => {
+                if (sisterId) localStorage.setItem('QUIZ-selectedSisterId', sisterId);
+                navigate('/dashboard/quizzes');
+              }}
+              className="text-sm font-semibold text-rose-500 hover:text-rose-600 transition-colors bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg"
+            >
+              Manage Quizzes
+            </button>
+          </div>
 
           {allQuizzesCompleted ? (
             <div className="text-center py-6 px-4 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-              <p className="text-gray-500 font-medium mb-1">All quizzes have been completed</p>
+              <p className="text-gray-500 font-medium mb-1">All quizzes have been COMPLETED or DRAFT</p>
               <p className="text-gray-400 text-sm mb-4">Create a new quiz to send a fresh invitation.</p>
               <button
                 onClick={() => {
@@ -190,12 +201,13 @@ const Invitation = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {quizzes.map(quiz => {
                 const isCompleted = quiz.status === 'COMPLETED';
+                const isDraft = quiz.quizState !== "READY";
                 const isSelected = selectedQuizId === quiz._id;
                 return (
                   <div
                     key={quiz._id}
-                    onClick={() => !isCompleted && setSelectedQuizId(quiz._id)}
-                    title={isCompleted ? 'This quiz has already been completed and cannot be sent again' : undefined}
+                    onClick={ ()=>handleQuizChoose(quiz) }
+                    title={isCompleted  ? 'This quiz has already been completed and cannot be sent again' : isDraft? "quiz is draft and cannot be sent": undefined}
                     className={`p-4 rounded-xl border-2 transition-all flex justify-between items-center ${
                       isCompleted
                         ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-50'
@@ -225,10 +237,20 @@ const Invitation = () => {
 
         {/* Coupon Selection */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2 mb-4">
-            <Gift size={20} className="text-amber-500" />
-            Select Coupon (Optional)
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <Gift size={20} className="text-amber-500" />
+              Select Coupon (Optional)
+            </h2>
+            <button
+              onClick={() => {
+                navigate('/dashboard/coupons');
+              }}
+              className="text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-lg"
+            >
+              Manage Coupons
+            </button>
+          </div>
           {coupons.length === 0 ? (
             <p className="text-gray-500 italic text-sm">No active coupons available. You can create one on the Coupons page.</p>
           ) : (

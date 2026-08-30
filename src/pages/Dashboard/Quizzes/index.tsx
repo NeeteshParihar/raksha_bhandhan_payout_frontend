@@ -32,7 +32,7 @@ const Quizzes = () => {
       const fetchQuizzes = async () => {
         setLoading(true);
         try {
-          const response = await getQuizzesOfSister(selectedSister._id);
+          const response = await getQuizzesOfSister(selectedSister._id, ["READY", "DRAFT"]);
           if (response.success && response.data) {
             setQuizzesList(response.data);
           } else {
