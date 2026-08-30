@@ -58,6 +58,7 @@ const App = () => {
         </Route>
       </Route>
 
+    {/* must be brother and logged in */}
       <Route path="/dashboard" element={<BrotherDashboard/>} >
         <Route index element={<Overview />} />
         <Route path="accounts" element={<Accounts />} />
@@ -65,18 +66,23 @@ const App = () => {
         <Route path="coupons" element={<Coupons />} />
         <Route path="profile" element={<SharedAccount />} />
       </Route>
-      
+
+      {/* must be brother and logged in */}
         <Route path="/dashboard/invitation/:sisterId" element={<Invitation />} />
       <Route path="/dashboard/quizzes/:quizId" element={<SisterQuiz />} />
       
+      {/* must be logged in and should be sister */}
       <Route path="/sisterDashboard" element={<SisterDashboard />}>
         <Route index element={<Navigate to="myquizzes" replace />} />
         <Route path="myquizzes" element={<SisterMyQuizzes />} />
         <Route path="account" element={<SharedAccount />} />
       </Route>
+      {/* need to check logged in user is sister internal loggin page */}
        <Route path="/sisterDashboard/myquizzes/quiz/:quizId" element={<TakeQuiz />} />
+       {/* external protection for role sister and logged in user */}
        <Route path="/sisterDashboard/myquiz/quiz/:quizId/payout" element={<Payout />} />
        <Route path="/sisterDashboard/myquizzes/quiz/:quizId/payout" element={<Payout />} />
+       {/* need to check the user is brother */}
        <Route path="/payout/:payoutId/confirm" element={<ConfirmPayout />} />
     </Routes>
   )

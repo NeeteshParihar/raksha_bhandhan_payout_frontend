@@ -18,7 +18,10 @@ const ConfirmPayout = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [agreed, setAgreed] = useState(false);
 
-  const isLoggedIn = !!userProfile ;
+  const isLoggedIn = userProfile != null && userProfile != undefined && userProfile.role === "BROTHER";
+
+  console.log("inside the confrm payout")
+  console.log(isLoggedIn);
 
   const fetchPayout = async () => {
     if (!payoutId) return;
@@ -67,6 +70,11 @@ const ConfirmPayout = () => {
   const sisterName = payout?.sister?.name || 'your sister';
   const isAlreadyPaid = payout?.status === PayoutStatus.SUCCESS;
 
+
+  if(!isLoggedIn) {
+    return <BrotherLoginModal onSuccess={handleLoginSuccess} />
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-amber-50 flex items-center justify-center p-4 font-sans relative overflow-hidden">
       {/* Decorative background */}
@@ -74,8 +82,7 @@ const ConfirmPayout = () => {
       <div className="absolute bottom-0 left-0 -ml-32 -mb-32 w-[450px] h-[450px] rounded-full bg-amber-200 opacity-30 blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-pink-100 opacity-20 blur-3xl pointer-events-none" />
 
-      {/* Login portal — shown when not logged in */}
-      {!isLoggedIn || userProfile.role !== "BROTHER" && <BrotherLoginModal onSuccess={handleLoginSuccess} />}
+     
 
       <div className="relative z-10 w-full max-w-lg">
         {/* Brand */}
