@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
-import { getQuizById, type IQuizDetails } from '../../../services/quiz';
+import { getQuizById, type IQuizDetails, type QuizState } from '../../../services/quiz';
 import QuestionList from '../../../components/Quizzes/QuestionList';
 import CreateQuestion from '../../../components/Quizzes/CreateQuestion';
 
@@ -25,6 +25,26 @@ const SisterQuiz = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDeleteSuccess = (questionId: string) => {
+    if (!quizDetails) return;
+    const deletedQuestion = quizDetails.questions.find(q => q._id === questionId);
+    if (!deletedQuestion) return;
+
+    setQuizDetails({
+      ...quizDetails,
+      questions: quizDetails.questions.filter(q => q._id !== questionId),
+      totalAmount: (quizDetails.totalAmount || 0) - deletedQuestion.scoreAmount
+    });
+  };
+
+  const handleStateUpdate = (newState: QuizState) => {
+    if (!quizDetails) return;
+    setQuizDetails({
+      ...quizDetails,
+      quizState: newState
+    });
   };
 
   useEffect(() => {
@@ -72,12 +92,18 @@ const SisterQuiz = () => {
         {/* Main Content: Create Question and List */}
         <div className="flex-1 w-full">
           {/* creating a new Question comes here */}
-          <CreateQuestion quizId={quizDetails._id} onSuccess={fetchQuiz} />
+          <CreateQuestion 
+            quizId={quizDetails._id} 
+            quizState={quizDetails.quizState || 'DRAFT'} 
+            hasQuestions={quizDetails.questions && quizDetails.questions.length > 0}
+            onSuccess={fetchQuiz} 
+            onStateUpdate={handleStateUpdate}
+          />
 
           {/* rendered the questions */}
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Questions List</h2>
-            <QuestionList questions={quizDetails.questions} />
+            <QuestionList questions={quizDetails.questions} quizId={quizDetails._id} onDeleteSuccess={handleDeleteSuccess} />
           </div>
         </div>
 

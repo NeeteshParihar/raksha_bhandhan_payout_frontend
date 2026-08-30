@@ -30,7 +30,7 @@ const QuizList: React.FC<QuizListProps> = ({ quizzes, loading, onAddQuestions, o
   }
 
   return (
-    <div className="bg-white/80 backdrop-blur-md p-6 rounded-3xl shadow-sm border border-white space-y-4">
+    <div className="bg-white/80 backdrop-blur-md p-6 rounded-3xl shadow-sm border border-white space-y-4 mb-10">
       {quizzes.map((quiz) => (
         <QuizCard
           key={quiz._id}

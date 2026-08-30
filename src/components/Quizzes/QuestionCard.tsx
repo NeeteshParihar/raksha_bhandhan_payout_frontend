@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { IQuestion } from '../../services/quiz';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { deleteQuestionFromQuiz } from '../../services/quiz';
 
 interface QuestionCardProps {
   question: IQuestion;
   isExpanded: boolean;
   onToggle: () => void;
   index: number;
+  quizId?: string;
+  onDeleteSuccess?: (questionId: string) => void;
 }
 
-const QuestionCard: React.FC<QuestionCardProps> = ({ question, isExpanded, onToggle, index }) => {
+const QuestionCard: React.FC<QuestionCardProps> = ({ question, isExpanded, onToggle, index, quizId, onDeleteSuccess }) => {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!quizId || !onDeleteSuccess) return;
+    setIsDeleting(true);
+    try {
+      await deleteQuestionFromQuiz(quizId, question._id);
+      setShowDeleteConfirm(false);
+      onDeleteSuccess(question._id);
+    } catch (error) {
+      console.error('Failed to delete question:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
       <div 
@@ -74,7 +95,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ question, isExpanded, onTog
           )}
 
           {question.answerList && question.answerList.length > 0 && (
-            <div>
+            <div className="mb-6">
               <h4 className="text-sm font-bold text-gray-500 mb-2 uppercase tracking-wider">Answers</h4>
               <div className="flex gap-2 flex-wrap">
                 {question.answerList.map((ans, i) => (
@@ -85,7 +106,51 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ question, isExpanded, onTog
               </div>
             </div>
           )}
+          
+          {quizId && onDeleteSuccess && (
+            <div className="flex justify-end pt-4 border-t border-gray-100">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteConfirm(true);
+                }}
+                className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 font-bold rounded-xl text-sm flex items-center gap-2 transition-colors"
+              >
+                <Trash2 size={16} /> Delete Question
+              </button>
+            </div>
+          )}
         </div>
+      )}
+
+      {showDeleteConfirm && createPortal(
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center">
+            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-6">
+              <Trash2 size={32} />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Delete Question?</h2>
+            <p className="text-gray-500 text-center mb-8">
+              Are you sure you want to delete this question? This action cannot be undone.
+            </p>
+            <div className="flex gap-4 w-full">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="flex-1 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors shadow-md shadow-red-200 disabled:opacity-50"
+              >
+                {isDeleting ? "Deleting..." : "Yes, Delete"}
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );

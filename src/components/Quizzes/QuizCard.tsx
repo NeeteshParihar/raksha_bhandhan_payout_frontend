@@ -80,26 +80,24 @@ const QuizCard: React.FC<QuizCardProps> = ({
               Total: ₹{quiz.totalAmount}
             </span>
           )}
-          {quiz.payoutStats && (
+          {quiz.payoutStatus && (
             <div className="flex gap-2 text-xs font-medium">
-              <span
-                className="text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-200"
-                title="Pending Payouts"
-              >
-                {quiz.payoutStats.pending} Pending
-              </span>
-              <span
-                className="text-green-600 bg-green-50 px-2 py-1 rounded border border-green-200"
-                title="Successful Payouts"
-              >
-                {quiz.payoutStats.success} Success
-              </span>
-              <span
-                className="text-red-600 bg-red-50 px-2 py-1 rounded border border-red-200"
-                title="Failed Payouts"
-              >
-                {quiz.payoutStats.failed} Failed
-              </span>
+              {quiz.payoutStatus === 'PENDING' && (
+                <span
+                  className="text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-200"
+                  title="Pending Payout"
+                >
+                  Pending Payout
+                </span>
+              )}
+              {quiz.payoutStatus === 'SUCCESS' && (
+                <span
+                  className="text-green-600 bg-green-50 px-2 py-1 rounded border border-green-200"
+                  title="Successful Payout"
+                >
+                  Payout Success
+                </span>
+              )}
             </div>
           )}
         </div>
@@ -134,7 +132,7 @@ const QuizCard: React.FC<QuizCardProps> = ({
             </button>
 
           {showMenu && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10">
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 top-0">
               {/* add questiion button */}
               <button
                 onClick={() => {

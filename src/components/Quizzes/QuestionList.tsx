@@ -4,9 +4,11 @@ import QuestionCard from './QuestionCard';
 
 interface QuestionListProps {
   questions: IQuestion[];
+  quizId?: string;
+  onDeleteSuccess?: (questionId: string) => void;
 }
 
-const QuestionList: React.FC<QuestionListProps> = ({ questions }) => {
+const QuestionList: React.FC<QuestionListProps> = ({ questions, quizId, onDeleteSuccess }) => {
   
   const [expandList, setExpandList] = useState<string[]>([]);
 
@@ -33,6 +35,8 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions }) => {
           index={index}
           isExpanded={expandList.includes(q._id)} 
           onToggle={() => toggleExpand(q._id)} 
+          quizId={quizId}
+          onDeleteSuccess={onDeleteSuccess}
         />
       ))}
     </div>

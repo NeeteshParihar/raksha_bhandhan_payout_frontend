@@ -13,11 +13,7 @@ export interface IQuiz {
   createdAt?: string;
   updatedAt?: string;
   totalAmount?: number;
-  payoutStats?: {
-    pending: number;
-    success: number;
-    failed: number;
-  };
+  payoutStatus?: 'PENDING' | 'SUCCESS';
   questions?: any[];
 }
 
@@ -95,6 +91,11 @@ export const addQuestionToQuiz = async (quizId: string, formData: FormData): Pro
   return response.data;
 };
 
+export const deleteQuestionFromQuiz = async (quizId: string, questionId: string): Promise<ApiResponse<null>> => {
+  const response = await api.delete(`/quizzes/${quizId}/question/${questionId}`);
+  return response.data;
+};
+
 export const QuizAction = {
   START: "START",
   SUBMIT: "SUBMIT",
@@ -106,6 +107,11 @@ export type QuizAction = typeof QuizAction[keyof typeof QuizAction];
 
 export const performQuizAction = async (quizId: string, action: QuizAction): Promise<ApiResponse<any>> => {
   const response = await api.patch(`/quizzes/${quizId}?action=${action}`);
+  return response.data;
+};
+
+export const updateQuizState = async (quizId: string, state: QuizState): Promise<ApiResponse<any>> => {
+  const response = await api.patch(`/quizzes/${quizId}/state`, { state });
   return response.data;
 };
 
