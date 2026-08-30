@@ -65,6 +65,7 @@ const App = () => {
         <Route path="coupons" element={<Coupons />} />
         <Route path="profile" element={<SharedAccount />} />
       </Route>
+      
         <Route path="/dashboard/invitation/:sisterId" element={<Invitation />} />
       <Route path="/dashboard/quizzes/:quizId" element={<SisterQuiz />} />
       
