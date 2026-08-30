@@ -80,26 +80,32 @@ const QuizCard: React.FC<QuizCardProps> = ({
               Total: ₹{quiz.totalAmount}
             </span>
           )}
-          {quiz.payoutStatus && (
-            <div className="flex gap-2 text-xs font-medium">
-              {quiz.payoutStatus === 'PENDING' && (
-                <span
-                  className="text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-200"
-                  title="Pending Payout"
-                >
-                  Pending Payout
-                </span>
-              )}
-              {quiz.payoutStatus === 'SUCCESS' && (
-                <span
-                  className="text-green-600 bg-green-50 px-2 py-1 rounded border border-green-200"
-                  title="Successful Payout"
-                >
-                  Payout Success
-                </span>
-              )}
-            </div>
-          )}
+          <div className="flex gap-2 text-xs font-medium">
+            {!quiz.payoutStatus && (
+              <span
+                className="text-gray-600 bg-gray-50 px-2 py-1 rounded border border-gray-200"
+                title="Not Paid"
+              >
+                Not Paid
+              </span>
+            )}
+            {quiz.payoutStatus === 'PENDING' && (
+              <span
+                className="text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-200"
+                title="Pending Payout"
+              >
+                Pending Payout
+              </span>
+            )}
+            {quiz.payoutStatus === 'SUCCESS' && (
+              <span
+                className="text-green-600 bg-green-50 px-2 py-1 rounded border border-green-200"
+                title="Successful Payout"
+              >
+                Payout Success
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
