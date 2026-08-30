@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // import pages
 import Home from "./pages/Home";
@@ -25,8 +25,23 @@ import SharedAccount from "./pages/Dashboard/SharedAccount";
 import { fetchUserProfile } from "./services/user";
 import { login } from "./features/userProfileSlice";
 
+const ProtectedRoute = ({
+  children,
+  allowedRole,
+}: {
+  children: React.ReactNode;
+  allowedRole: string;
+}) => {
+  const profile = useSelector((state: any) => state.userProfile.profile);
+  if (!profile || profile.role !== allowedRole) {
+    return <Navigate to="/auth/login" replace />;
+  }
+  return children;
+};
+
 const App = () => {
   const dispatch = useDispatch();
+  const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
     const initializeUser = async () => {
@@ -38,28 +53,36 @@ const App = () => {
       } catch (error) {
         // Safe to ignore, user is just not logged in
         console.log("No active session found.");
+      } finally {
+        setIsInitializing(false);
       }
     };
 
     initializeUser();
   }, [dispatch]);
 
+  if (isInitializing) {
+    return null; // Or a loading spinner
+  }
 
   return (
     <Routes>
+      <Route path="/" element={<Home />}></Route>
 
-      <Route path="/" element={ <Home/> }>
+      <Route path="/auth">
+        <Route path="login" element={<Login />}></Route>
+        <Route path="register-brother" element={<Register />}></Route>
       </Route>
 
-      <Route  path="/auth">
-        <Route path="login" element={<Login />}>
-        </Route>
-        <Route path="register-brother" element={<Register />}>
-        </Route>
-      </Route>
-
-    {/* must be brother and logged in */}
-      <Route path="/dashboard" element={<BrotherDashboard/>} >
+      {/* must be brother and logged in */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute allowedRole="BROTHER">
+            <BrotherDashboard />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Overview />} />
         <Route path="accounts" element={<Accounts />} />
         <Route path="quizzes" element={<Quizzes />} />
@@ -68,26 +91,62 @@ const App = () => {
       </Route>
 
       {/* must be brother and logged in */}
-        <Route path="/dashboard/invitation/:sisterId" element={<Invitation />} />
-      <Route path="/dashboard/quizzes/:quizId" element={<SisterQuiz />} />
-      
+      <Route
+        path="/dashboard/invitation/:sisterId"
+        element={
+          <ProtectedRoute allowedRole="BROTHER">
+            <Invitation />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/quizzes/:quizId"
+        element={
+          <ProtectedRoute allowedRole="BROTHER">
+            <SisterQuiz />
+          </ProtectedRoute>
+        }
+      />
+
       {/* must be logged in and should be sister */}
-      <Route path="/sisterDashboard" element={<SisterDashboard />}>
+      <Route
+        path="/sisterDashboard"
+        element={
+          <ProtectedRoute allowedRole="SISTER">
+            <SisterDashboard />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="myquizzes" replace />} />
         <Route path="myquizzes" element={<SisterMyQuizzes />} />
         <Route path="account" element={<SharedAccount />} />
       </Route>
-      {/* need to check logged in user is sister internal loggin page */}
-       <Route path="/sisterDashboard/myquizzes/quiz/:quizId" element={<TakeQuiz />} />
-       {/* external protection for role sister and logged in user */}
-       <Route path="/sisterDashboard/myquiz/quiz/:quizId/payout" element={<Payout />} />
-       <Route path="/sisterDashboard/myquizzes/quiz/:quizId/payout" element={<Payout />} />
-       {/* need to check the user is brother */}
-       <Route path="/payout/:payoutId/confirm" element={<ConfirmPayout />} />
+      {/* PROTECTED by internal check */}
+      <Route
+        path="/sisterDashboard/myquizzes/quiz/:quizId"
+        element={<TakeQuiz />}
+      />
+      {/* external protection for role sister and logged in user */}
+      <Route
+        path="/sisterDashboard/myquiz/quiz/:quizId/payout"
+        element={
+          <ProtectedRoute allowedRole="SISTER">
+            <Payout />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/sisterDashboard/myquizzes/quiz/:quizId/payout"
+        element={
+          <ProtectedRoute allowedRole="SISTER">
+            <Payout />
+          </ProtectedRoute>
+        }
+      />
+      {/* PROTECTED by internal check */}
+      <Route path="/payout/:payoutId/confirm" element={<ConfirmPayout />} />
     </Routes>
-  )
-}
+  );
+};
 
 export default App;
-
-
