@@ -17,8 +17,12 @@ const sistersAccountsSlice = createSlice({
       state.accounts = action.payload;
     },
     addSisterAccount: (state, action: PayloadAction<SisterAccount>) => {
-      if( state.accounts )
-        state.accounts.push(action.payload);
+      if (state.accounts) {
+        const exists = state.accounts.some(account => account._id === action.payload._id);
+        if (!exists) {
+          state.accounts.push(action.payload);
+        }
+      }
     },
     removeSisterAccount: (state, action: PayloadAction<string>) => {
       if( state.accounts)
