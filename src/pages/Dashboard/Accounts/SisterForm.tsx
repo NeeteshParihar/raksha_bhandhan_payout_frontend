@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PhoneNumber } from '../../../components/ui/PhoneNumber';
 
 interface SisterFormProps {
   add: (name: string, phoneNumber: string ) => void;
@@ -44,16 +45,14 @@ const SisterForm: React.FC<SisterFormProps> = ({ add }) => {
           className="flex-1 px-4 py-3 border border-gray-200 rounded-2xl bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 transition-colors disabled:opacity-50"
         />
         <div className="flex-1 flex">
-          <span className="inline-flex items-center px-4 py-3 rounded-l-2xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 font-medium">
-            +91
-          </span>
-          <input 
-            type="tel"
+          <PhoneNumber 
+            mode="input"
             placeholder="Phone Number"
+            prefix="+91"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             disabled={isAdding}
-            className="w-full px-4 py-3 border border-gray-200 rounded-r-2xl bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 transition-colors disabled:opacity-50"
+            className="w-full"
           />
         </div>
         <button 

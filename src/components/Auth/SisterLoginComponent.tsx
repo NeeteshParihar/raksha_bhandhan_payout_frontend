@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch } from "react-redux";
 import { loginUser, getOtp, loginByOtp } from "../../services/user";
 import { login } from "../../features/userProfileSlice";
+import { PhoneNumber } from "../ui/PhoneNumber";
 
 const passwordSchema = z.object({
   phoneNumber: z
@@ -179,27 +180,13 @@ export const SisterLoginComponent = () => {
       {loginMethod === "PASSWORD" ? (
         <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-5">
           {/* Phone Number Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone Number
-            </label>
-            <div className="flex">
-              <span className="inline-flex items-center px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 font-medium">
-                +91
-              </span>
-              <input
-                type="tel"
-                placeholder="9876543210"
-                className={`w-full px-4 py-3 rounded-r-xl border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-colors ${
-                  passwordErrors.phoneNumber ? "border-red-400" : "border-gray-200"
-                }`}
-                {...registerPassword("phoneNumber")}
-              />
-            </div>
-            {passwordErrors.phoneNumber && (
-              <p className="text-red-500 text-sm mt-1">{passwordErrors.phoneNumber.message}</p>
-            )}
-          </div>
+          <PhoneNumber
+            label="Phone Number"
+            placeholder="9876543210"
+            prefix="+91"
+            error={passwordErrors.phoneNumber?.message}
+            {...registerPassword("phoneNumber")}
+          />
 
           {/* Password Field */}
           <div>
@@ -230,27 +217,13 @@ export const SisterLoginComponent = () => {
       ) : (
         <form onSubmit={handleOtpSubmit(onOtpSubmit)} className="space-y-5">
           {/* Phone Number Field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone Number
-            </label>
-            <div className="flex">
-              <span className="inline-flex items-center px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 font-medium">
-                +91
-              </span>
-              <input
-                type="tel"
-                placeholder="9876543210"
-                className={`w-full px-4 py-3 rounded-r-xl border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-colors ${
-                  otpErrors.phoneNumber ? "border-red-400" : "border-gray-200"
-                }`}
-                {...registerOtp("phoneNumber")}
-              />
-            </div>
-            {otpErrors.phoneNumber && (
-              <p className="text-red-500 text-sm mt-1">{otpErrors.phoneNumber.message}</p>
-            )}
-          </div>
+          <PhoneNumber
+            label="Phone Number"
+            placeholder="9876543210"
+            prefix="+91"
+            error={otpErrors.phoneNumber?.message}
+            {...registerOtp("phoneNumber")}
+          />
 
           {/* OTP Field */}
           <div>

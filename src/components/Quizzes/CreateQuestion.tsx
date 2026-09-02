@@ -99,9 +99,9 @@ const CreateQuestion: React.FC<CreateQuestionProps> = ({ quizId, quizState, hasQ
               onChange={(e) => setLevel(e.target.value as any)}
               className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 font-medium text-gray-700"
             >
-              <option value="NOOB">Noob</option>
-              <option value="INTERMEDIATE">Intermediate</option>
-              <option value="PRO">Pro</option>
+              <option value="NOOB">Noob </option>
+              <option value="PRO">Pro </option>
+              <option value="LEGEND">Legend </option>
             </select>
           </div>
           <div>

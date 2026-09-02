@@ -1,5 +1,6 @@
 import React from 'react';
 import type { BrotherAccount } from '../../features/brothersAccountSlice';
+import { PhoneNumber } from '../ui/PhoneNumber';
 
 interface BrotherCardProps {
   brother: BrotherAccount;
@@ -11,7 +12,7 @@ const BrotherCard: React.FC<BrotherCardProps> = ({ brother, onSelect }) => {
     <div className="flex items-center justify-between p-4 border border-gray-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow group cursor-pointer" onClick={onSelect}>
       <div>
         <p className="font-bold text-lg text-gray-800 group-hover:text-amber-600 transition-colors">{brother.name}</p>
-        <p className="text-sm font-medium text-gray-500">{brother.phoneNumber}</p>
+        <PhoneNumber mode="display" value={brother.phoneNumber} className="text-sm font-medium text-gray-500" />
       </div>
       <button 
         onClick={(e) => {

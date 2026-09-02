@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useDispatch } from 'react-redux';
 import { loginUser, getOtp, loginByOtp } from '../../services/user';
 import { login } from '../../features/userProfileSlice';
+import { PhoneNumber } from '../ui/PhoneNumber';
 
 const passwordSchema = z.object({
   phoneNumber: z
@@ -148,16 +149,13 @@ export const BrotherLoginModal = ({ onSuccess }: BrotherLoginModalProps) => {
         {loginMethod === 'PASSWORD' ? (
           <form onSubmit={handlePwdSubmit(onPasswordSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-              <div className="flex">
-                <span className="inline-flex items-center px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 text-sm font-medium">+91</span>
-                <input
-                  type="tel" placeholder="9876543210"
-                  className={`w-full px-4 py-3 rounded-r-xl border text-sm bg-white/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 transition-colors ${pwdErrors.phoneNumber ? 'border-red-400' : 'border-gray-200'}`}
-                  {...regPwd('phoneNumber')}
-                />
-              </div>
-              {pwdErrors.phoneNumber && <p className="text-red-500 text-xs mt-1">{pwdErrors.phoneNumber.message}</p>}
+              <PhoneNumber
+                label="Phone Number"
+                placeholder="9876543210"
+                prefix="+91"
+                error={pwdErrors.phoneNumber?.message}
+                {...regPwd('phoneNumber')}
+              />
             </div>
 
             <div>
@@ -180,16 +178,13 @@ export const BrotherLoginModal = ({ onSuccess }: BrotherLoginModalProps) => {
         ) : (
           <form onSubmit={handleOtpSubmit(onOtpSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-              <div className="flex">
-                <span className="inline-flex items-center px-4 py-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-500 text-sm font-medium">+91</span>
-                <input
-                  type="tel" placeholder="9876543210"
-                  className={`w-full px-4 py-3 rounded-r-xl border text-sm bg-white/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 transition-colors ${otpErrors.phoneNumber ? 'border-red-400' : 'border-gray-200'}`}
-                  {...regOtp('phoneNumber')}
-                />
-              </div>
-              {otpErrors.phoneNumber && <p className="text-red-500 text-xs mt-1">{otpErrors.phoneNumber.message}</p>}
+              <PhoneNumber
+                label="Phone Number"
+                placeholder="9876543210"
+                prefix="+91"
+                error={otpErrors.phoneNumber?.message}
+                {...regOtp('phoneNumber')}
+              />
             </div>
 
             <div>

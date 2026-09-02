@@ -5,6 +5,7 @@ import { setBrothersAccounts } from '../../features/brothersAccountSlice';
 import { getBrothersAccounts } from '../../services/user';
 import type { BrotherAccount } from '../../features/brothersAccountSlice';
 import BrotherCard from './BrotherCard';
+import { PhoneNumber } from '../ui/PhoneNumber';
 
 interface PickBrotherProps {
   selectedBrother: BrotherAccount | null;
@@ -76,7 +77,7 @@ const PickBrother: React.FC<PickBrotherProps> = ({ selectedBrother, selectBrothe
         <div>
           <p className="text-sm text-gray-500 font-medium mb-1 uppercase tracking-wider">Selected Option</p>
           <p className="font-bold text-xl text-gray-800">{selectedBrother.name}</p>
-          <p className="text-gray-600 font-medium">{selectedBrother.phoneNumber}</p>
+          <PhoneNumber mode="display" value={selectedBrother.phoneNumber} className="text-gray-600 font-medium" />
         </div>
         <button 
           onClick={()=>unselectBrother()}

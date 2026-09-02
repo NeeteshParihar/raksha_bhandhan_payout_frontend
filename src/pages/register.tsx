@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../features/userProfileSlice";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
+import { PhoneNumber } from "../components/ui/PhoneNumber";
 
 // Define the validation schema using Zod
 const registerSchema = z.object({
@@ -138,10 +139,9 @@ const Register = () => {
           />
 
           {/* Phone Number Field */}
-          <Input
+          <PhoneNumber
             id="phoneNumber"
             label="Phone Number"
-            type="tel"
             placeholder="9876543210"
             prefix="+91"
             error={errors.phoneNumber?.message}

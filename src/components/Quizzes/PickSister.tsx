@@ -5,6 +5,7 @@ import { setSistersAccounts } from '../../features/sistersAccountsSlice';
 import { getSistersAccounts } from '../../services/user';
 import type { SisterAccount } from '../../pages/Dashboard/Accounts/SisterList';
 import SisterCard from './SisterCard';
+import { PhoneNumber } from '../ui/PhoneNumber';
 
 interface PickSisterProps {
   selectedSister: SisterAccount | null;
@@ -76,7 +77,7 @@ const PickSister: React.FC<PickSisterProps> = ({ selectedSister, selectSister, u
         <div>
           <p className="text-sm text-gray-500 font-medium mb-1 uppercase tracking-wider">Selected Option</p>
           <p className="font-bold text-xl text-gray-800">{selectedSister.name}</p>
-          <p className="text-gray-600 font-medium">{selectedSister.phoneNumber}</p>
+          <PhoneNumber mode="display" value={selectedSister.phoneNumber} className="text-gray-600 font-medium" />
         </div>
         <button 
           onClick={()=>unselectSister()}

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
+import { RotateCcw } from 'lucide-react';
 import type { SisterAccount } from '../Accounts/SisterList';
 import PickSister from '../../../components/Quizzes/PickSister';
 import QuizList from '../../../components/Quizzes/QuizList';
-import { getQuizzesOfSister, createQuiz, deleteQuiz, type IQuiz } from '../../../services/quiz';
+import { getQuizzesOfSister, createQuiz, deleteQuiz, performQuizAction, type IQuiz } from '../../../services/quiz';
 
 const Quizzes = () => {
   
@@ -15,6 +17,8 @@ const Quizzes = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newQuizTitle, setNewQuizTitle] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [quizToReset, setQuizToReset] = useState<IQuiz | null>(null);
+  const [isResetting, setIsResetting] = useState(false);
 
   const selectSister = (sister: SisterAccount) => {
     setSelectedSister(sister);
@@ -87,7 +91,23 @@ const Quizzes = () => {
   };
 
   const handleResetQuiz = (quiz: IQuiz) => {
-    console.log('Reset quiz clicked for quiz:', quiz);
+    setQuizToReset(quiz);
+  };
+
+  const confirmResetQuiz = async () => {
+    if (!quizToReset) return;
+    setIsResetting(true);
+    try {
+      const response = await performQuizAction(quizToReset._id, 'RESET');
+      if (response.success) {
+        setQuizzesList(prev => prev.map(q => q._id === quizToReset._id ? { ...q, status: 'PENDING' } : q));
+        setQuizToReset(null);
+      }
+    } catch (error) {
+      console.error('Failed to reset quiz:', error);
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   return (
@@ -156,6 +176,41 @@ const Quizzes = () => {
             onDeleteQuiz={handleRemoveQuiz}
           />
         </div>
+      )}
+
+      {quizToReset && createPortal(
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center">
+            <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-6">
+              <RotateCcw size={32} />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Reset Quiz?
+            </h2>
+            <p className="text-gray-500 mb-6">
+              Are you sure you want to reset <span className="font-bold text-gray-700">"{quizToReset.title}"</span>?<br/><br/>
+              <span className="text-rose-600 font-medium">Warning:</span> The quiz will be reset to pending and your sister can attempt this quiz again.
+            </p>
+            <div className="flex gap-4 w-full">
+              <button
+                onClick={() => setQuizToReset(null)}
+                className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                disabled={isResetting}
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmResetQuiz}
+                disabled={isResetting}
+                className="flex-1 py-3 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 transition-colors shadow-md shadow-amber-200 disabled:opacity-50"
+              >
+                {isResetting ? "Resetting..." : "Yes, Reset"}
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );

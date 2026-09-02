@@ -8,6 +8,7 @@ import { loginUser, getOtp, loginByOtp } from "../../services/user";
 import { login } from "../../features/userProfileSlice";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+import { PhoneNumber } from "../ui/PhoneNumber";
 
 const passwordSchema = z.object({
   phoneNumber: z
@@ -219,9 +220,8 @@ export const LoginComponent = () => {
       {loginMethod === "PASSWORD" ? (
         <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-5">
           {/* Phone Number Field */}
-          <Input
+          <PhoneNumber
             label="Phone Number"
-            type="tel"
             placeholder="9876543210"
             prefix="+91"
             error={passwordErrors.phoneNumber?.message}
@@ -249,9 +249,8 @@ export const LoginComponent = () => {
       ) : (
         <form onSubmit={handleOtpSubmit(onOtpSubmit)} className="space-y-5">
           {/* Phone Number Field */}
-          <Input
+          <PhoneNumber
             label="Phone Number"
-            type="tel"
             placeholder="9876543210"
             prefix="+91"
             error={otpErrors.phoneNumber?.message}

@@ -5,6 +5,7 @@ import type { RootState } from '../../../features/store';
 import { updatePassword, logoutUser } from '../../../services/user';
 import { logout } from '../../../features/userProfileSlice';
 import { User, Phone, Shield, KeyRound, AlertCircle, CheckCircle2, LogOut } from 'lucide-react';
+import { PhoneNumber } from '../../../components/ui/PhoneNumber';
 
 const SharedAccount: React.FC = () => {
   const user = useSelector((state: RootState) => state.userProfile.profile);
@@ -116,9 +117,7 @@ const SharedAccount: React.FC = () => {
             </div>
             <div>
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Number</p>
-              <p className="font-bold text-gray-800 text-lg">
-                {user.countryCode} {user.phoneNumber}
-              </p>
+              <PhoneNumber mode="display" value={`${user.countryCode} ${user.phoneNumber}`} className="font-bold text-gray-800 text-lg" />
             </div>
           </div>
 

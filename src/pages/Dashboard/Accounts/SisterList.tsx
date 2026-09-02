@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
+import { PhoneNumber } from '../../../components/ui/PhoneNumber';
 
 export interface SisterAccount {
   _id: string;
@@ -68,7 +69,7 @@ const SisterList: React.FC<SisterListProps> = ({ sisters, remove }) => {
             <div key={sister._id || index} className="flex flex-col md:flex-row md:items-center justify-between p-5 border border-gray-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow">
               <div className="mb-4 md:mb-0">
                 <p className="font-bold text-lg text-gray-800">{sister.name}</p>
-                <p className="text-sm font-medium text-gray-500">{sister.phoneNumber}</p>
+                <PhoneNumber mode="display" value={sister.phoneNumber} className="text-sm font-medium text-gray-500" />
               </div>
               <div className="flex gap-3">
                 <button 
@@ -102,13 +103,13 @@ const SisterList: React.FC<SisterListProps> = ({ sisters, remove }) => {
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Type <span className="font-bold text-rose-600 tracking-wider bg-rose-50 px-2 py-1 rounded">{sisterToDelete.phoneNumber}</span> to confirm:
               </label>
-              <input 
-                type="text" 
+              <PhoneNumber 
+                mode="input"
                 value={confirmPhone}
                 onChange={(e) => setConfirmPhone(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition-shadow"
                 placeholder="Enter phone number"
                 disabled={isDeleting}
+                className="w-full"
               />
             </div>
             {deleteError && (
