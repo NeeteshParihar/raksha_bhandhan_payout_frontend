@@ -7,6 +7,7 @@ import type { RootState } from '../../../features/store';
 import { getQuizzesOfSister, type IQuiz } from '../../../services/quiz';
 import { getCouponsOfSister, type ICoupon } from '../../../services/coupon';
 import { getSistersAccounts } from '../../../services/user';
+import { PhoneNumber } from '../../../components/ui/PhoneNumber';
 
 const Invitation = () => {
   const { sisterId } = useParams<{ sisterId: string }>();
@@ -146,7 +147,7 @@ const handleQuizChoose = (quiz: IQuiz) => {
           <div>
             <p className="text-sm text-gray-500 font-medium mb-1 uppercase tracking-wider">Sending to</p>
             <p className="font-bold text-xl text-gray-800">{sister.name}</p>
-            <p className="text-gray-600 font-medium">{sister.phoneNumber}</p>
+            <PhoneNumber mode="display" value={sister.phoneNumber} className="text-gray-600 font-medium" />
           </div>
         </div>
 
